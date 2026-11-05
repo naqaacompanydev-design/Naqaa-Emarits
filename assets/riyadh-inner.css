@@ -1,0 +1,123 @@
+/* Inner pages in the naqaa-cleaning.com design, light palette (matches the home page).
+   Loaded after site.css; header/footer/contact bar come from /assets/nq/nq-ui.css. */
+body.r-page{
+  --bg:#F5F2EA; --surface:#FFFFFF; --ink:#151821; --muted:#5A606B; --line:#E5DFD0;
+  --gold:#8E6210; --gold-hi:#C9A84C; --gold-2:#E4BF6A; --gold-3:#F5D98E; --on-gold:#1A1405;
+  --deep:#0B1A2E; --navy:#07111F; --on-deep:#F8F6F0; --deep-muted:#A7B1C2; --wa:#1FB65A;
+  --f-display:"Cairo",system-ui,sans-serif; --f-body:"Cairo",system-ui,sans-serif; --r:20px;
+  background:var(--bg); color:var(--ink); font-family:"Cairo",system-ui,sans-serif; line-height:1.85; color-scheme:light;
+}
+body.r-page h1,body.r-page h2,body.r-page h3{font-family:"Cairo",system-ui,sans-serif;letter-spacing:0}
+
+/* ---------- buttons (Riyadh: pill shape, gold gradient) ---------- */
+.r-page .btn{border-radius:50px;min-height:52px;padding:0 26px;font-weight:800;font-size:15.5px;gap:10px;transition:transform .3s ease,box-shadow .3s ease}
+.r-page .btn:hover{transform:translateY(-2px)}
+.r-page .btn svg{width:20px;height:20px}
+.r-page .btn-gold{background:linear-gradient(135deg,#C9A84C,#E4BF6A 60%,#F5D98E);color:var(--on-gold);box-shadow:0 10px 30px -10px rgba(201,168,76,.65)}
+.r-page .btn-wa{background:var(--wa);color:#fff;box-shadow:0 10px 30px -12px rgba(31,182,90,.6)}
+.r-page .btn-ghost{background:rgba(7,17,31,.35);color:var(--on-deep);border:1.5px solid rgba(248,246,240,.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.r-page .btn-ghost:hover{border-color:var(--gold-2);color:var(--gold-2)}
+.r-page .btn-line{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.r-page .btn-line:hover{border-color:var(--gold-hi);color:var(--gold)}
+
+/* ---------- hero: photo + navy overlay, centered ---------- */
+.r-hero{position:relative;isolation:isolate;overflow:hidden;background:var(--navy);color:var(--on-deep);text-align:center}
+.r-hero::after{display:none}
+.r-hero .r-hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:1}
+.r-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(7,17,31,.82) 0%,rgba(7,17,31,.62) 45%,rgba(7,17,31,.9) 100%),radial-gradient(60% 60% at 50% 40%,rgba(201,168,76,.12),transparent 70%)}
+.r-hero > .wrap{padding-block:124px 56px;max-width:900px}
+.r-hero .crumbs ol{justify-content:center;color:var(--deep-muted)}
+.r-hero .crumbs a:hover{color:var(--gold-2)}
+.r-pill{display:inline-flex!important;align-items:center;gap:8px;padding:6px 16px;border-radius:50px;border:1px solid rgba(201,168,76,.3);background:rgba(7,17,31,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--gold-2)!important;font-size:13px!important;letter-spacing:0!important;text-transform:none!important}
+.r-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold-2);box-shadow:0 0 10px var(--gold-2)}
+.r-hero h1{font-size:clamp(32px,7vw,58px);font-weight:900;line-height:1.25;margin:16px 0 12px;text-shadow:0 4px 24px rgba(0,0,0,.35);color:var(--on-deep)}
+.r-hero .lead{color:rgba(248,246,240,.8);font-size:clamp(15px,3.6vw,18px);max-width:640px;margin-inline:auto}
+.r-hero .btn-row{justify-content:center;margin-top:26px}
+.r-stats{display:grid;grid-template-columns:repeat(4,1fr);max-width:560px;margin:26px auto 0;border:1px solid rgba(248,246,240,.12);border-radius:18px;background:rgba(7,17,31,.5);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.r-stats div{padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.r-stats div + div{border-inline-start:1px solid rgba(248,246,240,.12)}
+.r-stats b{font-size:clamp(18px,4.6vw,24px);font-weight:900;color:var(--on-deep);line-height:1.2}
+.r-stats span{font-size:11.5px;color:var(--deep-muted);line-height:1.4}
+@media (max-width:520px){.r-hero > .wrap{padding-block:100px 44px}.r-stats{grid-template-columns:1fr 1fr}.r-stats div:nth-child(3){border-inline-start:0}.r-stats div:nth-child(n+3){border-top:1px solid rgba(248,246,240,.12)}}
+
+/* ---------- sections + headings ---------- */
+.r-page .band{padding-block:56px}
+.r-page .band-surface{background:#FBF9F3;border-color:var(--line)}
+.r-page .band-deep{background:var(--deep)}
+.r-page .head h2{font-size:clamp(26px,5.6vw,40px);font-weight:900}
+.r-page .eyebrow{color:var(--gold)}
+.r-page .band-deep .eyebrow{color:var(--gold-2)}
+.r-page .head .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid rgba(142,98,16,.22);border-radius:50px;background:rgba(201,168,76,.1);font-size:13px;letter-spacing:0;text-transform:none}
+
+/* ---------- content cards (each h2 section) ---------- */
+.r-page .prose{max-width:none;display:grid;gap:22px;align-content:start}
+.r-page .prose > * + *{margin-top:0}
+.r-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px 26px;box-shadow:0 18px 40px -32px rgba(11,26,46,.45);min-width:0}
+.r-card > * + *{margin-top:14px}
+.r-card h2{position:relative;font-size:clamp(20px,4.4vw,26px)!important;font-weight:900;margin:0 0 18px!important;padding-inline-start:16px;padding-bottom:16px;border-bottom:1px solid var(--line);color:var(--ink)}
+.r-card h2::before{content:"";position:absolute;inset-inline-start:0;top:4px;bottom:20px;width:4px;border-radius:4px;background:linear-gradient(180deg,#C9A84C,#E4BF6A)}
+.r-card h3{font-size:1.15rem;font-weight:800}
+.r-card p,.r-card li{color:#3F4550}
+.r-card-lead{background:linear-gradient(160deg,#FFF9EA,#FFFFFF);border-color:rgba(201,168,76,.35)}
+.r-page .check li::before{background-color:rgba(201,168,76,.2)}
+.r-page .note-box{background:#FFF9EA;border-inline-start-color:var(--gold-hi)}
+.r-page .areas li{background:#FBF9F3;border-color:var(--line)}
+.r-page .table-wrap{border-color:var(--line)}
+.r-page th{background:#FBF4E2}
+.r-page .r-card .cards{margin-top:6px}
+
+/* ---------- sidebar (Riyadh booking + why + links cards) ---------- */
+.r-page .layout{grid-template-columns:minmax(0,1fr) 330px;gap:28px}
+.r-page .aside{top:96px;gap:18px}
+.r-page .aside .box,.r-page .layout > div > .quote,.r-page .aside > .quote{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:0 18px 40px -32px rgba(11,26,46,.45)}
+.r-page .aside .box h2{font-size:1.08rem;font-weight:900;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.r-page .aside .r-book{background:linear-gradient(160deg,#0F213A,#081426);border-color:rgba(201,168,76,.3);color:var(--on-deep)}
+.r-page .aside .r-book h2{color:var(--gold-2);border-color:rgba(201,168,76,.2)}
+.r-page .aside .r-book p{color:var(--deep-muted);text-align:center;font-size:.9rem;margin-top:12px}
+.r-page .aside .r-book .btn{width:100%;margin-top:10px}
+.r-page .r-why ul{list-style:none;margin:0;padding:0;display:grid}
+.r-page .r-why li{padding:9px 0;border-bottom:1px dashed var(--line);font-size:.93rem;display:flex;gap:8px;align-items:baseline}
+.r-page .r-why li:last-child{border-bottom:0}
+.r-page .r-why li::before{content:"✓";color:var(--gold);font-weight:900}
+.r-page .layout > div > .quote{margin-bottom:0}
+.r-page .layout > div > .aside{margin-top:18px!important}
+@media (max-width:980px){.r-page .layout{grid-template-columns:1fr}}
+
+/* ---------- hub cards with photo (Riyadh services grid) ---------- */
+.r-page .cards{gap:22px}
+.r-page .card{border-radius:var(--r);border-color:var(--line);padding:0;overflow:hidden;box-shadow:0 18px 40px -32px rgba(11,26,46,.5);transition:transform .35s ease,box-shadow .35s ease,border-color .35s}
+.r-page .card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.5);box-shadow:0 24px 48px -28px rgba(11,26,46,.55)}
+.r-page .card .r-cb{display:flex;flex-direction:column;gap:10px;padding:22px;flex:1;align-items:center}
+.r-page .card:not(.r-img){padding:0}
+.r-page .r-ph{display:block;aspect-ratio:16/10;overflow:hidden;background:var(--deep)}
+.r-page .r-ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.r-page .card:hover .r-ph img{transform:scale(1.05)}
+.r-page .card.r-img .ic{margin-top:-46px;position:relative;border:3px solid #fff;background:#FFF5DC;width:52px;height:52px}
+.r-page .card .more{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 20px;border-radius:50px;background:linear-gradient(135deg,#C9A84C,#E4BF6A 60%,#F5D98E);color:var(--on-gold);font-weight:800}
+
+/* ---------- steps (navy band, numbered cards) ---------- */
+.r-page .steps li{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.18);border-top:1px solid rgba(201,168,76,.18);border-radius:18px;padding:22px}
+.r-page .steps li::before{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#C9A84C,#F5D98E);color:var(--on-gold);font-size:1.1rem;margin-inline:auto}
+
+/* ---------- FAQ (Riyadh) ---------- */
+.r-page .faq details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-top:10px}
+.r-page .faq details:first-of-type{border-top:1px solid var(--line)}
+.r-page .faq details[open]{border-color:rgba(201,168,76,.5)}
+
+/* ---------- final CTA card ---------- */
+.r-final{background:transparent!important;border:0!important}
+.r-final .wrap{display:block!important;padding-block:20px 64px!important}
+.r-final-card{background:linear-gradient(160deg,#0F213A,#081426);border:1px solid rgba(201,168,76,.3);border-radius:28px;padding:36px 24px;text-align:center;color:var(--on-deep);box-shadow:0 30px 70px -40px rgba(7,17,31,.8)}
+.r-final-card h2{font-size:clamp(24px,5vw,34px)!important;font-weight:900;color:var(--on-deep)}
+.r-final-card p{color:var(--deep-muted)!important;margin-top:8px}
+.r-final-card .btn-row{justify-content:center;margin-top:22px}
+.r-final-card .btn-line{background:transparent;color:var(--on-deep);border-color:rgba(248,246,240,.3)}
+
+/* ---------- quote form + blog cards in the light palette ---------- */
+.r-page .quote{border-radius:var(--r);box-shadow:0 18px 40px -32px rgba(11,26,46,.45)}
+.r-page .quote .btn{border-radius:50px}
+.r-page .post-card{border-radius:var(--r);border-color:var(--line)}
+.r-page .post-chip.on,.r-page .post-chip[aria-current="page"]{background:#FFF5DC;border-color:var(--gold-hi)}
+
+/* the old site header/footer classes are no longer rendered; keep the skip link */
+.r-page .skip{z-index:2000}

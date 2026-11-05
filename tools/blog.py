@@ -203,7 +203,7 @@ def build(emit, services, locations):
         def listing(path, h1, lead, trail, group, title, desc, current_chip=None):
             ch = chips if current_chip is None else chips.replace(' on"', '"').replace(f'href="{url(lang, current_chip)}"', f'href="{url(lang, current_chip)}" aria-current="page"')
             grid = '<div class="post-grid">' + "".join(card(a, t) for a in group) + "</div>"
-            return (f'<section class="hero hero-inner"><div class="wrap">{crumbs_html(lang, trail)}<p class="eyebrow">{t["blog"]}</p>'
+            return (f'<section class="hero hero-inner r-hero"><img class="r-hero-bg" src="/images/deep-cleaning.webp" alt="" fetchpriority="high" decoding="async"><div class="wrap">{crumbs_html(lang, trail)}<p class="eyebrow r-pill">{t["blog"]}</p>'
                     f'<h1>{escape(h1)}</h1><p class="lead">{escape(lead)}</p></div></section>'
                     f'<section class="band"><div class="wrap"><nav class="post-chips" aria-label="{t["blog"]}">{ch}</nav>{grid}{{PAGER}}</div></section>'
                     + final_cta(lang))
@@ -350,15 +350,9 @@ def render_article(a, related, other_has_blog):
     title = meta.get("seo_title") or f'{meta["title"]} | {C.BRAND_SHORT[lang]}'
     head = seo_head(lang, path, title, meta["desc"], schema, has_alt=both, og_image=img, og_type="article")
 
-    licence = ""
-    if C.TRADE_LICENCE:
-        licence = (" · رقم الرخصة التجارية " if lang == "ar" else " · Trade licence no. ") + escape(C.TRADE_LICENCE)
-    tokens = {"TEL": tel_number(), "TEL_DISPLAY": _tel_display(), "WA": wa_number(), "WA_MSG": quote(t["wa_msg"]),
-              "ALT_URL": alt_url, "LICENCE": licence, **icons}
-    header = (TPL / f"header.{lang}.html").read_text(encoding="utf-8")
-    footer = (TPL / f"footer.{lang}.html").read_text(encoding="utf-8")
-    for k, v in tokens.items():
-        header, footer = header.replace("{{" + k + "}}", v), footer.replace("{{" + k + "}}", v)
+    from tools import shell
+    header = shell.header(lang, alt_url)
+    footer = shell.footer(lang, t["wa_msg"])
     styles = (TPL / "styles.html").read_text(encoding="utf-8")
     dir_ = "rtl" if lang == "ar" else "ltr"
     return f'''<!doctype html>

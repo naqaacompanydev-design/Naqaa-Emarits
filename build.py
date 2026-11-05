@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT))
 from tools import config as C  # noqa: E402
 from tools.layout import (UI, ICONS, aside, abs_url, breadcrumb_schema, business_schema, business_ref,  # noqa: E402
                           booking_bar, cards, crumbs_html, faq_block, faq_schema, final_cta, page, quote_form, url,
-                          wa_number, tel_number, WA_ICON, CALL_ICON)
+                          wa_number, tel_number, WA_ICON, CALL_ICON, SERVICE_IMG, DEFAULT_IMG)
 from content.services import SERVICES  # noqa: E402
 from content.locations import LOCATIONS  # noqa: E402
 from content import pages as P  # noqa: E402
@@ -51,14 +51,17 @@ def emit(lang, path, html):
     PAGES.append((lang, path, html))
 
 
-def hero_inner(lang, trail, eyebrow, h1, lead, buttons=True):
+def hero_inner(lang, trail, eyebrow, h1, lead, buttons=True, image=None):
     t = UI[lang]
     btns = ""
     if buttons:
-        btns = (f'<div class="btn-row"><a class="btn btn-gold" href="{url(lang, "get-a-quote/")}">{t["price"]}</a>'
-                f'<a class="btn btn-ghost" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa"]}</span></a></div>')
-    return (f'<section class="hero hero-inner"><div class="wrap">{crumbs_html(lang, trail)}'
-            f'<p class="eyebrow">{eyebrow}</p><h1>{h1}</h1><p class="lead">{lead}</p>{btns}</div></section>')
+        btns = (f'<div class="btn-row"><a class="btn btn-wa" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa_cta"]}</span></a>'
+                f'<a class="btn btn-ghost" href="tel:+{tel_number()}">{CALL_ICON}<span>{t["call_now"]}</span></a></div>')
+    stats = '<div class="r-stats">' + "".join(f"<div><b>{escape(a)}</b><span>{escape(b)}</span></div>" for a, b in t["stats"]) + "</div>"
+    img = image or DEFAULT_IMG
+    return (f'<section class="hero hero-inner r-hero"><img class="r-hero-bg" src="{img}" alt="" fetchpriority="high" decoding="async">'
+            f'<div class="wrap">{crumbs_html(lang, trail)}'
+            f'<p class="eyebrow r-pill">{eyebrow}</p><h1>{h1}</h1><p class="lead">{lead}</p>{btns}{stats if buttons else ""}</div></section>')
 
 
 def steps_band(lang, heading):
@@ -77,7 +80,7 @@ def build_home(lang):
     h, t = P.HOME[lang], UI[lang]
     chips = "".join(f"<li>{escape(c)}</li>" for c in h["chips"])
     promise = "".join(f'<li>{ICONS[i]}<div><b>{escape(a)}</b><span>{escape(b)}</span></div></li>' for i, a, b in h["promise"])
-    svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], s[lang]["name"], s[lang]["card"], t["learn_more"]) for s in SERVICES])
+    svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], s[lang]["name"], s[lang]["card"], t["learn_more"], SERVICE_IMG[s["slug"]]) for s in SERVICES])
     loc_cards = cards([(url(lang, f'locations/{l["slug"]}/'), "pin", l[lang]["name"], "، ".join(l[lang]["areas"][:4]) + "…" if lang == "ar" else ", ".join(l[lang]["areas"][:4]) + "…", t["price_arrow"]) for l in LOCATIONS], "four")
     alt = "تنظيف كنبة قماش بجهاز الشفط" if lang == "ar" else "Cleaning a fabric sofa with an extraction machine"
     body = f'''<div class="home-page"><section class="hero hero-home hero-photo">
@@ -116,7 +119,7 @@ def build_service(lang, s):
         f'<li><a href="{url(lang, "locations/" + l["slug"] + "/")}">{escape(x["svc_in_loc"].format(d["name"], l[lang]["name"]))}</a></li>'
         for l in LOCATIONS)
     related = [(url(lang, f'services/{o["slug"]}/'), o[lang]["name"]) for o in SERVICES if o is not s]
-    body = (hero_inner(lang, trail, x["emirates_line"], escape(d["h1"]), escape(d["lead"])) +
+    body = (hero_inner(lang, trail, x["emirates_line"], escape(d["h1"]), escape(d["lead"]), image=SERVICE_IMG[s["slug"]]) +
             f'''<section class="band"><div class="wrap layout"><article class="prose">
   <h2>{x["included"]}</h2><ul class="check">{included}</ul>
   {sections}
@@ -139,7 +142,7 @@ def build_location(lang, l):
     trail = home_trail(lang) + [(hub["crumb"], "locations/"), (d["name"], path)]
     sections = "".join(f"<h2>{escape(h2)}</h2>{html}" for h2, html in d["body"])
     areas = "".join(f"<li>{escape(a)}</li>" for a in d["areas"])
-    svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], x["svc_in_loc"].format(s[lang]["name"], d["name"]), s[lang]["card"], t["learn_more"]) for s in SERVICES], "two")
+    svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], x["svc_in_loc"].format(s[lang]["name"], d["name"]), s[lang]["card"], t["learn_more"], SERVICE_IMG[s["slug"]]) for s in SERVICES], "two")
     related = [(url(lang, f'locations/{o["slug"]}/'), o[lang]["h1_short"]) for o in LOCATIONS if o is not l]
     body = (hero_inner(lang, trail, escape(d["name"]), escape(d["h1"]), escape(d["lead"])) +
             f'''<section class="band"><div class="wrap layout"><article class="prose">
@@ -161,7 +164,7 @@ def build_services_hub(lang):
     d, t = P.SERVICES_HUB[lang], UI[lang]
     path = "services/"
     trail = home_trail(lang) + [(d["crumb"], path)]
-    svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], s[lang]["name"], s[lang]["card"], t["learn_more"]) for s in SERVICES])
+    svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], s[lang]["name"], s[lang]["card"], t["learn_more"], SERVICE_IMG[s["slug"]]) for s in SERVICES])
     rows = "".join(f'<tr><td>{escape(need)}</td><td><a href="{url(lang, "services/" + slug + "/")}">{escape(SVC[slug][lang]["name"])}</a></td></tr>' for need, slug in d["compare"])
     body = (hero_inner(lang, trail, T[lang]["emirates_line"], escape(d["h1"]), escape(d["lead"])) +
             f'''<section class="band"><div class="wrap">{svc_cards}</div></section>

@@ -28,28 +28,104 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"https://www.naqaa-uae.com/#business","name":"Naqaa Cleaning","alternateName":"نقاء للتنظيف","url":"https://www.naqaa-uae.com/","logo":"https://www.naqaa-uae.com/assets/logo.svg","image":"https://www.naqaa-uae.com/assets/og-default.png","areaServed":[{"@type":"City","name":"Dubai"},{"@type":"City","name":"Abu Dhabi"},{"@type":"City","name":"Sharjah"},{"@type":"City","name":"Ajman"}],"knowsLanguage":["en","ar"]},{"@type":"Service","name":"Home cleaning","serviceType":"Home cleaning","description":"Regular and one-off home cleaning for apartments and villas in Dubai, Abu Dhabi, Sharjah and Ajman. Trained team, materials included, price on WhatsApp.","url":"https://www.naqaa-uae.com/services/home-cleaning/","provider":{"@id":"https://www.naqaa-uae.com/#business"},"areaServed":[{"@type":"City","name":"Dubai"},{"@type":"City","name":"Abu Dhabi"},{"@type":"City","name":"Sharjah"},{"@type":"City","name":"Ajman"}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.naqaa-uae.com/"},{"@type":"ListItem","position":2,"name":"Services","item":"https://www.naqaa-uae.com/services/"},{"@type":"ListItem","position":3,"name":"Home cleaning","item":"https://www.naqaa-uae.com/services/home-cleaning/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do I need to provide cleaning materials or a vacuum?","acceptedAnswer":{"@type":"Answer","text":"No. The team brings its own equipment and materials. If you want a specific product used on a surface, such as marble or wood, tell us and we'll use yours."}},{"@type":"Question","name":"Will the same cleaner come every time?","acceptedAnswer":{"@type":"Answer","text":"For regular bookings we try to keep the same team so they learn your home and your preferences. If someone is off, we tell you before the visit."}},{"@type":"Question","name":"Can I book for the same day?","acceptedAnswer":{"@type":"Answer","text":"Send your details on WhatsApp and we'll tell you the earliest available time in your area."}},{"@type":"Question","name":"Do I have to stay at home during the cleaning?","acceptedAnswer":{"@type":"Answer","text":"It's best to be there at the start and for the final walkthrough. Many clients leave access with building security in between."}}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300..900&display=swap">
+<link rel="stylesheet" href="/assets/nq/nq-ui.css">
+<style id="nq-soc-css">
+.nq-soc{display:flex;flex-direction:column;align-items:center;gap:8px;margin:2px 0 16px}
+.nq-soc-l{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:800;color:#e4bf6a;letter-spacing:.4px}
+.nq-soc-l::before,.nq-soc-l::after{content:'';width:28px;height:1px;background:linear-gradient(90deg,transparent,rgba(228,191,106,.6),transparent)}
+.nq-soc-i{display:flex;gap:10px;justify-content:center}
+.nq-soc-i>*{position:relative;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff!important;background:var(--bg);box-shadow:0 0 0 1.5px rgba(228,191,106,.55);text-decoration:none!important;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;animation:nqSocIn .6s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i)*90ms)}
+.nq-soc-i svg{width:17px;height:17px;position:relative;z-index:1}
+.nq-soc-i>*::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(from 0deg,transparent 72%,rgba(245,217,142,.95));opacity:0;animation:nqSocRing 7.5s linear infinite;animation-delay:calc(var(--i)*1.5s);-webkit-mask:radial-gradient(circle,transparent 64%,#000 66%);mask:radial-gradient(circle,transparent 64%,#000 66%);pointer-events:none}
+.nq-soc-i a:hover,.nq-soc-i a:focus-visible{transform:translateY(-4px) scale(1.1);box-shadow:0 0 0 1.5px #f5d98e,0 8px 18px -6px var(--sh)}
+.nq-soc .s-snap{--bg:#fffc00;--sh:rgba(255,252,0,.7);color:#111!important}
+.nq-soc .s-insta{--bg:radial-gradient(circle at 30% 110%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%);--sh:rgba(214,36,159,.7)}
+.nq-soc .s-tiktok{--bg:#010101;--sh:rgba(37,244,238,.6)}
+.nq-soc .s-x{--bg:#000;--sh:rgba(255,255,255,.45)}
+.nq-soc .s-yt{--bg:#ff0000;--sh:rgba(255,0,0,.6)}
+@keyframes nqSocIn{from{opacity:0;transform:translateY(12px) scale(.6)}to{opacity:1;transform:none}}
+@keyframes nqSocRing{0%,82%{opacity:0;transform:rotate(0)}86%{opacity:1}100%{opacity:0;transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.nq-soc-i>*,.nq-soc-i>*::after{animation:none}}
+</style>
+<style id="nq-pbtn">
+#fbar .p,#nq-fbar .p{background:linear-gradient(135deg,#c9a84c,#e4bf6a 60%,#f5d98e);color:#1a1405!important;font-weight:900}
+#fbar .p svg,#nq-fbar .p svg{width:19px;height:19px}
+@media(max-width:899px){#fbar a,#nq-fbar a{font-size:14px!important;gap:6px!important;padding:0 4px!important}#fbar .p,#nq-fbar .p{flex:1.15!important}}
+@media(max-width:359px){#fbar a,#nq-fbar a{font-size:12.5px!important}#fbar svg,#nq-fbar svg{width:17px!important;height:17px!important}}
+@media(prefers-reduced-motion:no-preference){#fbar .p svg,#nq-fbar .p svg{animation:nqCalc 5s ease-in-out 2s infinite}}
+@keyframes nqCalc{0%,88%,100%{transform:none}91%{transform:translateY(-3px) rotate(-8deg)}94%{transform:translateY(0) rotate(6deg)}}
+</style>
+<style id="nq-mm">
+.mm{position:static;display:flex;align-items:center}
+.mm-t{display:inline-flex!important;align-items:center;gap:6px}
+.mm-t i,.mm-m summary i{width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg) translateY(-2px);transition:transform .3s}
+.mm:hover .mm-t i,.mm:focus-within .mm-t i{transform:rotate(135deg) translateY(-2px)}
+.mm-p{position:absolute;top:100%;left:50%;width:min(980px,94vw);transform:translate(-50%,12px);opacity:0;visibility:hidden;transition:opacity .25s,transform .35s cubic-bezier(.22,1,.36,1),visibility .25s;background:rgba(9,20,36,.98);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(201,168,76,.28);border-top:0;border-radius:0 0 24px 24px;box-shadow:0 30px 60px -20px rgba(0,0,0,.85);padding:22px 24px 18px;z-index:1300;text-align:right}
+.mm:hover .mm-p,.mm:focus-within .mm-p{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.mm-gs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 22px}
+.mm-g{display:flex;flex-direction:column}
+.mm-gt{display:flex;align-items:center;gap:8px;font:900 15px Cairo,sans-serif;color:#e4bf6a;padding:0 0 8px;margin-bottom:4px;border-bottom:1px solid rgba(201,168,76,.18)}
+.mm-gt span{font-size:18px}
+#hdr .mm-p a,#nq-hdr .mm-p a{display:block;font-size:14.5px!important;font-weight:700;color:rgba(248,246,240,.86)!important;padding:7px 0!important;white-space:normal;text-decoration:none!important;transition:color .2s,transform .2s}
+#hdr .mm-p a::after,#nq-hdr .mm-p a::after{display:none!important}
+#hdr .mm-p a:hover,#nq-hdr .mm-p a:hover{color:#f5d98e!important;transform:translateX(-4px)}
+.mm-q{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(201,168,76,.18)}
+#hdr .mm-q a,#nq-hdr .mm-q a,.mm-m .mm-q a{display:inline-flex!important;align-items:center;height:38px;padding:0 16px!important;border-radius:50px;border:1px solid rgba(201,168,76,.35);font-size:14px!important;font-weight:800;color:#f5d98e!important;text-decoration:none!important;transform:none!important}
+#hdr .mm-q a.g,#nq-hdr .mm-q a.g,.mm-m .mm-q a.g{background:linear-gradient(135deg,#c9a84c,#e4bf6a 60%,#f5d98e);color:#1a1405!important;border:0}
+#hdr .mm-q a.all,#nq-hdr .mm-q a.all,.mm-m .mm-q a.all{margin-inline-start:auto;border:0}
+/* phone menu */
+.mm-m{width:100%;border-bottom:1px solid rgba(201,168,76,.08)}
+.mm-m summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;color:#f8f6f0;padding:12px 0}
+#menu .mm-m summary{font-size:26px}#nq-menu .mm-m summary{font-size:20px}
+.mm-m summary::-webkit-details-marker{display:none}
+.mm-m[open] summary{color:#e4bf6a}.mm-m[open] summary i{transform:rotate(135deg) translateY(-2px)}
+.mm-mb{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;padding:4px 2px 14px;text-align:right;max-height:52vh;overflow:auto}
+.mm-mb .mm-gt{font-size:14px}
+#menu .mm-mb a,#nq-menu .mm-mb a{display:block;width:auto!important;font-size:14px!important;font-weight:700;color:rgba(248,246,240,.86)!important;padding:6px 0!important;border:0!important;opacity:1!important;transform:none!important;text-align:right!important}
+.mm-mb .mm-q{grid-column:1/-1;justify-content:center;margin-top:4px}
+.mm-mb .mm-q a.all{margin-inline-start:0!important}
+#menu:has(.mm-m[open]){justify-content:flex-start;overflow:auto}
+@media(max-width:899px){.mm-p{display:none}}
+</style>
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/riyadh-inner.css">
 </head>
-<body>
+<body class="nq-inner r-page">
 <a class="skip" href="#main">Skip to content</a>
-<div class="draft"><div class="wrap">Preview build · phone numbers, domain and licence details are placeholders until confirmed</div></div>
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round"/><circle cx="20" cy="20" r="3.2" fill="#C9A84C"/></svg><span><b>Naqaa</b><small>Cleaning · UAE</small></span></a>
-    <nav class="nav" aria-label="Main"><a href="/services/" aria-current="page">Services</a><a href="/locations/">Locations</a><a href="/about/">About</a><a href="/faq/">FAQ</a><a href="/contact/">Contact</a><a class="lang-link" href="/ar/services/home-cleaning/" hreflang="ar" lang="ar" aria-label="اقرأ هذه الصفحة بالعربية">العربية</a><a class="btn btn-gold" href="/get-a-quote/">Get a price</a></nav>
-    <details class="menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></summary>
-      <div class="menu-panel"><a href="/services/" aria-current="page">Services</a><a href="/locations/">Locations</a><a href="/about/">About</a><a href="/faq/">FAQ</a><a href="/contact/">Contact</a><a href="/get-a-quote/">Get a price</a><a href="/ar/services/home-cleaning/" hreflang="ar" lang="ar">العربية</a></div>
-    </details>
-  </div>
+<div id="nq-progress" aria-hidden="true"></div>
+<header id="nq-hdr">
+  <nav class="nq-wrap nq-hdr-in" aria-label="Main menu">
+    <a href="/" class="nq-logo" aria-label="Naqaa Cleaning - home"><img src="/images/brand/naqaa-logo.svg" alt="Naqaa Cleaning" width="230" height="46"></a>
+    <div class="nq-nav">
+      <a href="/services/">Services</a>
+      <a href="/locations/">Locations</a>
+      <a href="/get-a-quote/">Prices</a>
+      <a href="/about/">About</a>
+      
+    </div>
+    <div class="nq-actions">
+      <a href="/ar/services/home-cleaning/" class="nq-pill" hreflang="ar" lang="ar">عربي</a>
+      <a href="tel:+971000000000" class="nq-call">Call now</a>
+      <button class="nq-burger" id="nq-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nq-menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
 </header>
+<nav id="nq-menu" aria-label="Mobile menu">
+  <a href="/services/">Services</a>
+  <a href="/locations/">Locations</a>
+  <a href="/get-a-quote/">Get a price</a>
+  <a href="/about/">About</a>
+  
+  <a href="tel:+971000000000" class="nq-menu-call">📞 <span dir="ltr">+971 XX XXX XXXX</span></a>
+</nav>
+
 <main id="main">
-<section class="hero hero-inner"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li><span aria-current="page">Home cleaning</span></li></ol></nav><p class="eyebrow">Dubai · Abu Dhabi · Sharjah · Ajman</p><h1>Home cleaning for apartments and villas</h1><p class="lead">Weekly, fortnightly or one-off cleaning that keeps a lived-in home fresh. The team brings its own equipment and materials, and you get the price before anything is booked.</p><div class="btn-row"><a class="btn btn-gold" href="/get-a-quote/">Get your price</a><a class="btn btn-ghost" href="https://wa.me/971000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>WhatsApp</span></a></div></div></section><section class="band"><div class="wrap layout"><article class="prose">
-  <h2>What's included</h2><ul class="check"><li>Dusting of surfaces, shelves and skirting</li><li>Kitchen counters, sink, hob and outside of appliances</li><li>Bathrooms: toilet, basin, shower, mirrors</li><li>Vacuuming and mopping of all floors</li><li>Making beds and tidying living areas</li><li>Balcony sweep and glass door wipe</li><li>Emptying bins and replacing liners</li><li>A final walkthrough with you</li></ul>
-  <h2>Who regular home cleaning is for</h2><p>Most of our regular clients are families and working couples in apartments who would rather spend the weekend out than scrubbing a bathroom. It also suits villas where one person can't keep up with several floors, and short-term rental hosts who need the place reset between guests.</p><p>If the home hasn't had a proper clean for a while, start with a <a href="/services/deep-cleaning/">deep clean</a> first. Regular visits then keep it at that level in less time.</p><h2>Why homes in the UAE get dusty so fast</h2><p>Fine dust comes in through balcony doors, window frames and AC returns, especially after a dusty or windy day. It settles on floors and dark furniture within a day or two. Regular cleaning on a fixed day of the week deals with it before it builds up into the grey film that needs a deep clean.</p><h2>How often should you book?</h2><p>Weekly suits families with children or pets and homes with a lot of foot traffic. Every two weeks suits couples and smaller apartments. One-off visits work before guests arrive, after a party or when you get back from a trip. Tell us how you live in the home and we'll suggest a schedule; you can change it any time.</p>
-  <h2>Available across the UAE</h2><ul><li><a href="/locations/dubai/">Home cleaning in Dubai</a></li><li><a href="/locations/abu-dhabi/">Home cleaning in Abu Dhabi</a></li><li><a href="/locations/sharjah/">Home cleaning in Sharjah</a></li><li><a href="/locations/ajman/">Home cleaning in Ajman</a></li></ul>
-  <h2>Questions about Home cleaning</h2><div class="faq"><details><summary>Do I need to provide cleaning materials or a vacuum?</summary><p>No. The team brings its own equipment and materials. If you want a specific product used on a surface, such as marble or wood, tell us and we&#x27;ll use yours.</p></details><details><summary>Will the same cleaner come every time?</summary><p>For regular bookings we try to keep the same team so they learn your home and your preferences. If someone is off, we tell you before the visit.</p></details><details><summary>Can I book for the same day?</summary><p>Send your details on WhatsApp and we&#x27;ll tell you the earliest available time in your area.</p></details><details><summary>Do I have to stay at home during the cleaning?</summary><p>It&#x27;s best to be there at the start and for the final walkthrough. Many clients leave access with building security in between.</p></details></div>
-</article>
+<section class="hero hero-inner r-hero"><img class="r-hero-bg" src="/images/hero/home-carpet.webp" alt="" fetchpriority="high" decoding="async"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li><span aria-current="page">Home cleaning</span></li></ol></nav><p class="eyebrow r-pill">Dubai · Abu Dhabi · Sharjah · Ajman</p><h1>Home cleaning for apartments and villas</h1><p class="lead">Weekly, fortnightly or one-off cleaning that keeps a lived-in home fresh. The team brings its own equipment and materials, and you get the price before anything is booked.</p><div class="btn-row"><a class="btn btn-wa" href="https://wa.me/971000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>Get a price on WhatsApp</span></a><a class="btn btn-ghost" href="tel:+971000000000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Call now</span></a></div><div class="r-stats"><div><b>4</b><span>emirates covered</span></div><div><b>6</b><span>cleaning services</span></div><div><b>AED</b><span>clear price upfront</span></div><div><b>✓</b><span>equipment included</span></div></div></div></section><section class="band"><div class="wrap layout"><article class="prose"><section class="r-card"><h2>What's included</h2><ul class="check"><li>Dusting of surfaces, shelves and skirting</li><li>Kitchen counters, sink, hob and outside of appliances</li><li>Bathrooms: toilet, basin, shower, mirrors</li><li>Vacuuming and mopping of all floors</li><li>Making beds and tidying living areas</li><li>Balcony sweep and glass door wipe</li><li>Emptying bins and replacing liners</li><li>A final walkthrough with you</li></ul>
+  </section><section class="r-card"><h2>Who regular home cleaning is for</h2><p>Most of our regular clients are families and working couples in apartments who would rather spend the weekend out than scrubbing a bathroom. It also suits villas where one person can't keep up with several floors, and short-term rental hosts who need the place reset between guests.</p><p>If the home hasn't had a proper clean for a while, start with a <a href="/services/deep-cleaning/">deep clean</a> first. Regular visits then keep it at that level in less time.</p></section><section class="r-card"><h2>Why homes in the UAE get dusty so fast</h2><p>Fine dust comes in through balcony doors, window frames and AC returns, especially after a dusty or windy day. It settles on floors and dark furniture within a day or two. Regular cleaning on a fixed day of the week deals with it before it builds up into the grey film that needs a deep clean.</p></section><section class="r-card"><h2>How often should you book?</h2><p>Weekly suits families with children or pets and homes with a lot of foot traffic. Every two weeks suits couples and smaller apartments. One-off visits work before guests arrive, after a party or when you get back from a trip. Tell us how you live in the home and we'll suggest a schedule; you can change it any time.</p>
+  </section><section class="r-card"><h2>Available across the UAE</h2><ul><li><a href="/locations/dubai/">Home cleaning in Dubai</a></li><li><a href="/locations/abu-dhabi/">Home cleaning in Abu Dhabi</a></li><li><a href="/locations/sharjah/">Home cleaning in Sharjah</a></li><li><a href="/locations/ajman/">Home cleaning in Ajman</a></li></ul>
+  </section><section class="r-card"><h2>Questions about Home cleaning</h2><div class="faq"><details><summary>Do I need to provide cleaning materials or a vacuum?</summary><p>No. The team brings its own equipment and materials. If you want a specific product used on a surface, such as marble or wood, tell us and we&#x27;ll use yours.</p></details><details><summary>Will the same cleaner come every time?</summary><p>For regular bookings we try to keep the same team so they learn your home and your preferences. If someone is off, we tell you before the visit.</p></details><details><summary>Can I book for the same day?</summary><p>Send your details on WhatsApp and we&#x27;ll tell you the earliest available time in your area.</p></details><details><summary>Do I have to stay at home during the cleaning?</summary><p>It&#x27;s best to be there at the start and for the final walkthrough. Many clients leave access with building security in between.</p></details></div>
+</section></article>
 <div><form class="quote" id="quote" data-wa="971000000000" aria-labelledby="q-title">
   <h2 id="q-title">Quick quote</h2>
   <p class="sub">Three taps, then we send your price on WhatsApp.</p>
@@ -60,37 +136,39 @@
   <button class="btn btn-wa" type="submit"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>Send me the price</span></button>
   <p class="note">No payment now. You confirm after you see the price.</p>
 </form><aside class="aside" style="margin-top:16px;position:static">
-  <div class="box"><h2>Get a price on WhatsApp</h2><p>Tell us the home size, the service and your area. We reply with a clear price in AED.</p>
-    <a class="btn btn-wa" href="https://wa.me/971000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>WhatsApp</span></a>
-    <a class="btn btn-line" href="/get-a-quote/">Get your price</a></div>
+  <div class="box r-book"><h2>Book your service with Naqaa</h2>
+    <a class="btn btn-gold" href="tel:+971000000000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span dir="ltr">+971 XX XXX XXXX</span></a>
+    <a class="btn btn-wa" href="https://wa.me/971000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>Get a price on WhatsApp</span></a>
+    <p>Tell us the home size, the service and your area. We reply with a clear price in AED.</p></div>
+  <div class="box r-why"><h2>Why Naqaa?</h2><ul><li>Clear price in AED before booking</li><li>Equipment and materials included</li><li>A checklist for every service</li><li>Dubai, Abu Dhabi, Sharjah, Ajman</li></ul></div>
   <div class="box"><h2>Related pages</h2><ul><li><a href="/services/deep-cleaning/">Deep cleaning</a></li><li><a href="/services/move-in-move-out-cleaning/">Move-in / move-out cleaning</a></li><li><a href="/services/sofa-carpet-cleaning/">Sofa &amp; carpet cleaning</a></li><li><a href="/services/water-tank-cleaning/">Water tank cleaning</a></li><li><a href="/services/office-cleaning/">Office cleaning</a></li></ul></div>
 </aside></div>
-</div></section><section class="band band-deep"><div class="wrap"><div class="head"><p class="eyebrow">How it works</p><h2>How booking works</h2><p>No call centre and no forms to print. Everything happens on WhatsApp.</p></div><ol class="steps"><li><b>Tell us the place</b><span>Home size, service and emirate, in the quick quote.</span></li><li><b>Get your price</b><span>We reply on WhatsApp with the price in AED and the available times.</span></li><li><b>We arrive equipped</b><span>The team brings its own machines and materials at the agreed time.</span></li><li><b>Walk through together</b><span>You check the work with the team before they leave.</span></li></ol></div></section><section class="final band-surface"><div class="wrap">
-  <div><h2>Ready for a cleaner place this week?</h2><p>Send the details on WhatsApp and get your price before anything is booked.</p></div>
-  <div class="btn-row"><a class="btn btn-gold" href="/get-a-quote/">Get your price</a>
-  <a class="btn btn-line" href="/services/">See services</a></div>
-</div></section>
+</div></section><section class="band band-deep"><div class="wrap"><div class="head"><p class="eyebrow">How it works</p><h2>How booking works</h2><p>No call centre and no forms to print. Everything happens on WhatsApp.</p></div><ol class="steps"><li><b>Tell us the place</b><span>Home size, service and emirate, in the quick quote.</span></li><li><b>Get your price</b><span>We reply on WhatsApp with the price in AED and the available times.</span></li><li><b>We arrive equipped</b><span>The team brings its own machines and materials at the agreed time.</span></li><li><b>Walk through together</b><span>You check the work with the team before they leave.</span></li></ol></div></section><section class="final r-final"><div class="wrap"><div class="r-final-card">
+  <h2>Ready for a cleaner place this week?</h2><p>Send the details on WhatsApp and get your price before anything is booked.</p>
+  <div class="btn-row"><a class="btn btn-gold" href="/get-a-quote/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg><span>Get your price</span></a>
+  <a class="btn btn-wa" href="https://wa.me/971000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>Get a price on WhatsApp</span></a>
+  <a class="btn btn-line" href="tel:+971000000000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Call now</span></a></div>
+</div></div></section>
 </main>
-<footer class="site-footer">
-  <div class="wrap cols">
-    <div><a class="brand" href="/"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round"/><circle cx="20" cy="20" r="3.2" fill="#C9A84C"/></svg><span><b style="color:var(--on-deep)">Naqaa</b><small>Cleaning · UAE</small></span></a>
-      <p style="margin-top:14px;max-width:34ch">Naqaa brings the cleaning standards it built in Riyadh to homes, villas and offices in the UAE.</p></div>
-    <div><h2>Services</h2><ul><li><a href="/services/home-cleaning/">Home cleaning</a></li><li><a href="/services/deep-cleaning/">Deep cleaning</a></li><li><a href="/services/move-in-move-out-cleaning/">Move-in / move-out cleaning</a></li><li><a href="/services/sofa-carpet-cleaning/">Sofa &amp; carpet cleaning</a></li><li><a href="/services/water-tank-cleaning/">Water tank cleaning</a></li><li><a href="/services/office-cleaning/">Office cleaning</a></li></ul></div>
-    <div><h2>Locations</h2><ul><li><a href="/locations/dubai/">Cleaning in Dubai</a></li><li><a href="/locations/abu-dhabi/">Cleaning in Abu Dhabi</a></li><li><a href="/locations/sharjah/">Cleaning in Sharjah</a></li><li><a href="/locations/ajman/">Cleaning in Ajman</a></li></ul></div>
-    <div><h2>Company</h2><ul>
-      <li><a href="/about/">About</a></li>
-      <li><a href="/get-a-quote/">Get a price</a></li>
-      <li><a href="/faq/">FAQ</a></li>
-      <li><a href="/contact/">Contact</a></li>
-      <li><a href="https://naqaa-cleaning.com/en/" rel="noopener">Naqaa in Saudi Arabia</a></li></ul></div>
+<footer id="nq-footer">
+  <div class="nq-wrap">
+    <div class="nq-f-links"><a href="/">Home</a><a href="/services/">Services</a><a href="/locations/">Locations</a><a href="/get-a-quote/">Prices</a><a href="/faq/">FAQ</a><a href="/contact/">Contact</a><a href="/ar/" hreflang="ar" lang="ar">العربية</a></div>
+    <div class="nq-f-bottom">
+      <div>© <span id="nq-yr"></span> — <b>Naqaa Cleaning</b>. All rights reserved.</div>
+      <div class="nq-f-legal"><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a></div>
+    </div>
+    <span class="nq-credit" id="nq-credit">✦ Website by Click Zodiac ✦
+      <span class="nq-credit-pop" id="nq-credit-pop"><a href="https://wa.me/201023444798" target="_blank" rel="noopener">WhatsApp - 01023444798</a><a href="https://wa.me/201213816311" target="_blank" rel="noopener">WhatsApp - 01213816311</a></span>
+    </span>
   </div>
-  <div class="wrap legal"><span>© Naqaa Cleaning</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></div>
 </footer>
-<div id="nq-fbar" role="navigation" aria-label="Contact">
-  <a class="w" href="https://wa.me/971000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><span>WhatsApp</span></a>
-  <a class="p" href="/get-a-quote/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg><span>Get your price</span></a>
-  <a href="tel:+971000000000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Call</span></a>
+<div id="nq-fbar" class="cmd-bar">
+  <a class="w" href="https://wa.me/971000000000?text=Hello%2C%20I%27d%20like%20to%20ask%20about%20your%20cleaning%20services%20in%20the%20UAE" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.78h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88z"/></svg>WhatsApp</a>
+  <a class="p" data-nq="price" href="/get-a-quote/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3"/><path d="M8 7h8"/><path d="M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg>Get a price</a>
+  <a class="c" href="tel:+971000000000"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> Call</a>
 </div>
+
 <script src="/assets/site.js" defer></script>
+<script src="/assets/nq/nq-ui.js" defer></script>
 </body>
 </html>

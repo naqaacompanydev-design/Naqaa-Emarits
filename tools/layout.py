@@ -1,5 +1,6 @@
 """Shared page shell: <head> (SEO + structured data), header, footer, contact bar and components."""
 import json
+import re
 from html import escape
 
 from tools import config as C
@@ -20,7 +21,9 @@ UI = {
         "f_sister": "Naqaa in Saudi Arabia",
         "aside_title": "Get a price on WhatsApp",
         "aside_text": "Tell us the home size, the service and your area. We reply with a clear price in AED.",
-        "aside_more": "Related pages",
+        "aside_more": "Related pages", "book_title": "Book your service with Naqaa", "why_title": "Why Naqaa?", "call_now": "Call now",
+        "why_rows": ["Clear price in AED before booking", "Equipment and materials included", "A checklist for every service", "Dubai, Abu Dhabi, Sharjah, Ajman"],
+        "stats": [("4", "emirates covered"), ("6", "cleaning services"), ("AED", "clear price upfront"), ("✓", "equipment included")],
         "final_h": "Ready for a cleaner place this week?",
         "final_p": "Send the details on WhatsApp and get your price before anything is booked.",
         "see_services": "See services", "learn_more": "Read more →", "price_arrow": "Get a price →",
@@ -46,7 +49,9 @@ UI = {
         "f_sister": "نقاء في السعودية",
         "aside_title": "اعرف السعر على واتساب",
         "aside_text": "أخبرنا بحجم البيت والخدمة ومنطقتك، ونرد عليك بسعر واضح بالدرهم.",
-        "aside_more": "صفحات ذات صلة",
+        "aside_more": "صفحات ذات صلة", "book_title": "احجز خدمتك الآن مع نقاء", "why_title": "لماذا نقاء؟", "call_now": "اتصل الآن",
+        "why_rows": ["سعر واضح بالدرهم قبل الحجز", "المعدات والمواد علينا", "قائمة مهام لكل خدمة", "دبي وأبوظبي والشارقة وعجمان"],
+        "stats": [("4", "إمارات نخدمها"), ("6", "خدمات تنظيف"), ("AED", "سعر واضح بالدرهم"), ("✓", "المعدات علينا")],
         "final_h": "جاهز لمكان أنظف هذا الأسبوع؟",
         "final_p": "أرسل التفاصيل على واتساب واعرف السعر قبل أي حجز.",
         "see_services": "تصفح الخدمات", "learn_more": "اقرأ المزيد ←", "price_arrow": "اعرف السعر ←",
@@ -199,12 +204,23 @@ def faq_block(faqs):
     ) + "</div>"
 
 
+SERVICE_IMG = {
+    "home-cleaning": "/images/hero/home-carpet.webp", "deep-cleaning": "/images/deep-cleaning.webp",
+    "move-in-move-out-cleaning": "/images/hero/hero-home.webp", "sofa-carpet-cleaning": "/images/majlis-cleaning.webp",
+    "water-tank-cleaning": "/images/tank-cleaning-insulation.webp", "office-cleaning": "/images/office-cleaning.webp",
+}
+DEFAULT_IMG = "/images/hero/hero-sofa.webp"
+
+
 def cards(items, cols=""):
-    """items: (href, icon_key or None, title, text, more_label)"""
+    """items: (href, icon_key or None, title, text, more_label[, image])"""
     out = []
-    for href, icon, title, text, more in items:
+    for it in items:
+        href, icon, title, text, more = it[:5]
+        img = it[5] if len(it) > 5 else None
+        ph = f'<span class="r-ph"><img src="{img}" alt="" loading="lazy" decoding="async"></span>' if img else ""
         ic = f'<span class="ic">{ICONS[icon]}</span>' if icon else ""
-        out.append(f'<a class="card" href="{href}">{ic}<h3>{escape(title)}</h3><p>{escape(text)}</p><span class="more">{more}</span></a>')
+        out.append(f'<a class="card{" r-img" if img else ""}" href="{href}">{ph}<span class="r-cb">{ic}<h3>{escape(title)}</h3><p>{escape(text)}</p><span class="more">{more}</span></span></a>')
     return f'<div class="cards {cols}">' + "".join(out) + "</div>"
 
 
@@ -221,20 +237,25 @@ def crumbs_html(lang, trail):
 
 def final_cta(lang):
     t = UI[lang]
-    return f'''<section class="final band-surface"><div class="wrap">
-  <div><h2>{t["final_h"]}</h2><p>{t["final_p"]}</p></div>
-  <div class="btn-row"><a class="btn btn-gold" href="{url(lang, "get-a-quote/")}">{t["price"]}</a>
-  <a class="btn btn-line" href="{url(lang, "services/")}">{t["see_services"]}</a></div>
-</div></section>'''
+    return f'''<section class="final r-final"><div class="wrap"><div class="r-final-card">
+  <h2>{t["final_h"]}</h2><p>{t["final_p"]}</p>
+  <div class="btn-row"><a class="btn btn-gold" href="{url(lang, "get-a-quote/")}">{CALC_ICON}<span>{t["price"]}</span></a>
+  <a class="btn btn-wa" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa_cta"]}</span></a>
+  <a class="btn btn-line" href="tel:+{tel_number()}">{CALL_ICON}<span>{t["call_now"]}</span></a></div>
+</div></div></section>'''
 
 
 def aside(lang, related):
+    from tools.shell import tel_display
     t = UI[lang]
     links = "".join(f'<li><a href="{href}">{escape(name)}</a></li>' for href, name in related)
+    why = "".join(f"<li>{escape(x)}</li>" for x in t["why_rows"])
     return f'''<aside class="aside">
-  <div class="box"><h2>{t["aside_title"]}</h2><p>{t["aside_text"]}</p>
-    <a class="btn btn-wa" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa"]}</span></a>
-    <a class="btn btn-line" href="{url(lang, "get-a-quote/")}">{t["price"]}</a></div>
+  <div class="box r-book"><h2>{t["book_title"]}</h2>
+    <a class="btn btn-gold" href="tel:+{tel_number()}">{CALL_ICON}<span dir="ltr">{tel_display()}</span></a>
+    <a class="btn btn-wa" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa_cta"]}</span></a>
+    <p>{t["aside_text"]}</p></div>
+  <div class="box r-why"><h2>{t["why_title"]}</h2><ul>{why}</ul></div>
   <div class="box"><h2>{t["aside_more"]}</h2><ul>{links}</ul></div>
 </aside>'''
 
@@ -322,57 +343,38 @@ def page(lang, path, title, description, body, services, locations, schema=(), c
     alt_target = path if alt_path is None else alt_path
     lang_link = f'<a class="lang-link" href="{url(other, alt_target)}" hreflang="{other}" lang="{other}" aria-label="{t["other_lang_label"]}">{t["other_lang"]}</a>'
 
-    svc_links = "".join(f'<li><a href="{url(lang, "services/" + s["slug"] + "/")}">{escape(s[lang]["name"])}</a></li>' for s in services)
-    loc_links = "".join(f'<li><a href="{url(lang, "locations/" + l["slug"] + "/")}">{escape(l[lang]["h1_short"])}</a></li>' for l in locations)
-    licence = f'<span>{t["f_licence"]} {escape(C.TRADE_LICENCE)}</span>' if C.TRADE_LICENCE else ""
-    draft = f'<div class="draft"><div class="wrap">{t["draft"]}</div></div>' if is_placeholder() else ""
-    sister = "https://naqaa-cleaning.com/" + ("en/" if lang == "en" else "")
-
+    from tools import shell
+    body = cardify(body)
     return f'''<!doctype html>
 <html lang="{lang}" dir="{dir_}">
 <head>
 {seo_head(lang, path, title, description, schema, has_alt, noindex, og_image, og_type)}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS[lang]}">
-<link rel="stylesheet" href="/assets/site.css">
+{shell.head_assets()}<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/riyadh-inner.css">
 </head>
-<body>
+<body class="nq-inner r-page">
 <a class="skip" href="#main">{t["skip"]}</a>
-{draft}
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="{url(lang, "")}">{LOGO_MARK}<span><b>{C.BRAND_SHORT[lang]}</b><small>{t["brand_sub"]}</small></span></a>
-    <nav class="nav" aria-label="{"الرئيسية" if lang == "ar" else "Main"}">{nav}{lang_link}<a class="btn btn-gold" href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a></nav>
-    <details class="menu"><summary>{ICONS["menu"]}<span>{t["menu"]}</span></summary>
-      <div class="menu-panel">{nav}<a href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a><a href="{url(other, alt_target)}" hreflang="{other}" lang="{other}">{t["other_lang"]}</a></div>
-    </details>
-  </div>
-</header>
+{shell.header(lang, url(other, alt_target))}
 <main id="main">
 {body}
 </main>
-<footer class="site-footer">
-  <div class="wrap cols">
-    <div><a class="brand" href="{url(lang, "")}">{LOGO_MARK}<span><b style="color:var(--on-deep)">{C.BRAND_SHORT[lang]}</b><small>{t["brand_sub"]}</small></span></a>
-      <p style="margin-top:14px;max-width:34ch">{t["f_about"]}</p></div>
-    <div><h2>{t["f_services"]}</h2><ul>{svc_links}</ul></div>
-    <div><h2>{t["f_locations"]}</h2><ul>{loc_links}</ul></div>
-    <div><h2>{t["f_company"]}</h2><ul>
-      <li><a href="{url(lang, "about/")}">{t["nav_about"]}</a></li>
-      <li><a href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a></li>
-      <li><a href="{url(lang, "faq/")}">{t["nav_faq"]}</a></li>{f'<li><a href="{url(lang, "blog/")}">{t["nav_blog"]}</a></li>' if BLOG_LIVE[lang] else ""}
-      <li><a href="{url(lang, "contact/")}">{t["nav_contact"]}</a></li>
-      <li><a href="{sister}" rel="noopener">{t["f_sister"]}</a></li></ul></div>
-  </div>
-  <div class="wrap legal"><span>© {C.BRAND[lang]}</span>{licence}<span><a href="{url(lang, "privacy/")}">{t["f_privacy"]}</a> · <a href="{url(lang, "terms/")}">{t["f_terms"]}</a></span></div>
-</footer>
-<div id="nq-fbar" role="navigation" aria-label="{"تواصل" if lang == "ar" else "Contact"}">
-  <a class="w" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa"]}</span></a>
-  <a class="p" href="{url(lang, "get-a-quote/")}">{CALC_ICON}<span>{t["price"]}</span></a>
-  <a href="tel:+{tel_number()}">{CALL_ICON}<span>{t["call"]}</span></a>
-</div>
+{shell.footer(lang)}
 <script src="/assets/site.js" defer></script>
+<script src="/assets/nq/nq-ui.js" defer></script>
 </body>
 </html>
 '''
+
+
+def cardify(body):
+    """Riyadh look: every <h2> section inside an article.prose becomes its own card."""
+    def wrap(m):
+        inner = m.group(2)
+        parts = re.split(r"(?=<h2[ >])", inner)
+        out = []
+        for part in parts:
+            if not part.strip():
+                continue
+            out.append(f'<section class="r-card">{part}</section>' if part.lstrip().startswith("<h2") else f'<div class="r-card r-card-lead">{part}</div>')
+        return f'<article class="{m.group(1)}">' + "".join(out) + "</article>"
+    return re.sub(r'<article class="(prose(?! post)[^"]*)">(.*?)</article>', wrap, body, flags=re.S)

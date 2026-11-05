@@ -224,18 +224,6 @@ tr:last-child td{border-bottom:0}
 @media (max-width:860px){.site-footer .cols{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.site-footer .cols{grid-template-columns:1fr}}
 
-/* fixed contact bar */
-#nq-fbar{position:fixed;inset:auto 0 0;z-index:40;background:var(--deep);border-top:1px solid var(--deep-line);
-  padding:8px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));
-  display:flex;gap:8px;justify-content:center}
-#nq-fbar a{flex:1;max-width:260px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.95rem;color:var(--on-deep);background:var(--deep-2)}
-#nq-fbar a.p{background:var(--gold-hi);color:var(--on-gold);flex:1.2}
-#nq-fbar a.w{background:#127C49;color:#fff}
-#nq-fbar svg{width:19px;height:19px;flex:none}
-@media (max-width:360px){#nq-fbar a{font-size:.85rem}}
-@media (max-width:980px){.layout.form-first > .aside{order:-1}}
-.layout > div > .quote{position:static}
-
 /* ---- Centered layout (owner request): headings, heroes, section intros, cards, steps, CTAs, footer.
    Long reading text (article sections, checklists, FAQ answers, tables, form fields) stays aligned to the
    start of the line, because centered paragraphs are hard to read. */
