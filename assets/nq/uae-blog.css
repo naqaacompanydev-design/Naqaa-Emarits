@@ -1,0 +1,4 @@
+/* UAE additions on top of the naqaa-cleaning.com blog index styles */
+.blog-card .reveal,.nq-blogidx .reveal{opacity:1;transform:none}
+html[dir="ltr"] body.nq-blogidx{direction:ltr}
+.blog-card-img:empty{background:linear-gradient(135deg,#0b1a2e,#1d2d47)}

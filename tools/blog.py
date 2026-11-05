@@ -193,38 +193,25 @@ def build(emit, services, locations):
         other = "ar" if lang == "en" else "en"
         other_has_blog = bool(arts[other])
 
-        # index + pagination
+        # index + pagination + sections (naqaa-cleaning.com blog index design)
         pages = [items[i:i + PER_PAGE] for i in range(0, len(items), PER_PAGE)]
         counts = {k: sum(1 for a in items if a["section"] == k) for k in SECTIONS}
-        chips = (f'<a class="post-chip on" href="{url(lang, "blog/")}">{t["all"]} <b>{len(items)}</b></a>' +
-                 "".join(f'<a class="post-chip" href="{url(lang, "blog/category/" + k + "/")}">{escape(v[lang])} <b>{counts[k]}</b></a>'
-                         for k, v in SECTIONS.items() if counts[k]))
 
-        def listing(path, h1, lead, trail, group, title, desc, current_chip=None):
-            ch = chips if current_chip is None else chips.replace(' on"', '"').replace(f'href="{url(lang, current_chip)}"', f'href="{url(lang, current_chip)}" aria-current="page"')
-            grid = '<div class="post-grid">' + "".join(card(a, t) for a in group) + "</div>"
-            return (f'<section class="hero hero-inner r-hero"><img class="r-hero-bg" src="/images/deep-cleaning.webp" alt="" fetchpriority="high" decoding="async"><div class="wrap">{crumbs_html(lang, trail)}<p class="eyebrow r-pill">{t["blog"]}</p>'
-                    f'<h1>{escape(h1)}</h1><p class="lead">{escape(lead)}</p></div></section>'
-                    f'<section class="band"><div class="wrap"><nav class="post-chips" aria-label="{t["blog"]}">{ch}</nav>{grid}{{PAGER}}</div></section>'
-                    + final_cta(lang))
+        def chips(current):
+            out = [(url(lang, "blog/"), t["all"], len(items), current == "blog/")]
+            out += [(url(lang, f"blog/category/{k}/"), v[lang], counts[k], current == f"blog/category/{k}/") for k, v in SECTIONS.items() if counts[k]]
+            return "".join(f'<a href="{h}"' + (' aria-current="page" class="on"' if on else "") + f'>{escape(x)} <small>{n}</small></a>' for h, x, n, on in out)
 
         for i, group in enumerate(pages):
             path = "blog/" if i == 0 else f"blog/page/{i + 1}/"
             trail = trail_home + [(t["blog"], "blog/")] + ([(f'{t["page"]} {i + 1}', path)] if i else [])
-            pager = ""
-            if len(pages) > 1:
-                prev = (f'<a href="{url(lang, "blog/" if i == 1 else f"blog/page/{i}/")}">{t["prev"]}</a>' if i else "<span></span>")
-                nxt = (f'<a href="{url(lang, f"blog/page/{i + 2}/")}">{t["next"]}</a>' if i + 1 < len(pages) else "<span></span>")
-                pager = f'<nav class="pager" aria-label="{t["page"]}">{prev}<span>{t["page"]} {i + 1} / {len(pages)}</span>{nxt}</nav>'
             title = t["title"] if i == 0 else f'{t["title"]} ({t["page"]} {i + 1})'
-            body = listing(path, t["h1"], t["lead"], trail, group, title, t["desc"]).replace("{PAGER}", pager)
             schema = [breadcrumb_schema(lang, trail), {"@type": "Blog", "name": t["h1"], "url": abs_url(lang, path), "publisher": business_ref()}]
-            alt = path if other_has_blog and i == 0 else ("blog/" if other_has_blog else "")
-            emit(lang, path, page(lang, path, title, t["desc"], body, services, locations, schema, current="blog/",
-                                  has_alt=(other_has_blog and i == 0), alt_path=alt, noindex=i > 0))
+            both = other_has_blog and i == 0
+            emit(lang, path, render_index(lang, path, title, t["desc"], schema, group, chips("blog/" if i == 0 else ""), pager_html(lang, i, len(pages)),
+                                          url(other, "blog/" if other_has_blog else ""), both, noindex=i > 0))
             paths[lang].add(path)
 
-        # section pages
         for k, v in SECTIONS.items():
             group = [a for a in items if a["section"] == k]
             if not group:
@@ -232,10 +219,9 @@ def build(emit, services, locations):
             path = f"blog/category/{k}/"
             trail = trail_home + [(t["blog"], "blog/"), (v[lang], path)]
             other_has_sec = any(a["section"] == k for a in arts[other])
-            body = listing(path, v[lang], t["sec_desc"].format(v[lang]), trail, group, "", "", current_chip=path).replace("{PAGER}", "")
-            emit(lang, path, page(lang, path, t["sec_title"].format(v[lang]), t["sec_desc"].format(v[lang]), body, services, locations,
-                                  [breadcrumb_schema(lang, trail)], current="blog/", has_alt=other_has_sec,
-                                  alt_path=path if other_has_sec else ("blog/" if other_has_blog else "")))
+            emit(lang, path, render_index(lang, path, t["sec_title"].format(v[lang]), t["sec_desc"].format(v[lang]), [breadcrumb_schema(lang, trail)],
+                                          group, chips(path), "", url(other, path if other_has_sec else ("blog/" if other_has_blog else "")),
+                                          other_has_sec, h1=v[lang]))
             paths[lang].add(path)
 
         # articles (naqaa-cleaning.com article design, see tools/article.py)
@@ -387,6 +373,72 @@ def render_article(a, related, other_has_blog):
 </div>
 </div>
 {footer}
+<script src="/assets/nq/nq-ui.js" defer></script>
+</body>
+</html>
+'''
+
+
+# ---------------------------------------------------------------- blog index (Riyadh design)
+_CHEV_PREV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
+_CHEV_NEXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>'
+IDX = {"ar": {"h1": 'مدونة خبراء <span>نقاء</span>', "read": "اقرأ المقال", "prev": "السابقة", "next": "التالية", "of": "من", "page": "صفحة", "nav": "أقسام المدونة", "pages": "صفحات المدونة"},
+       "en": {"h1": 'The <span>Naqaa</span> experts blog', "read": "Read article", "prev": "Previous", "next": "Next", "of": "of", "page": "Page", "nav": "Blog sections", "pages": "Blog pages"}}
+
+
+def pager_html(lang, i, total):
+    if total < 2:
+        return ""
+    t = IDX[lang]
+    href = lambda n: url(lang, "blog/" if n == 1 else f"blog/page/{n}/")
+    prev = (f'<a class="pg-prev" href="{href(i)}" rel="prev">{_CHEV_PREV}<span>{t["prev"]}</span></a>' if i
+            else f'<span class="pg-prev is-off" aria-hidden="true">{_CHEV_PREV}<span>{t["prev"]}</span></span>')
+    nxt = (f'<a class="pg-next" href="{href(i + 2)}" rel="next"><span>{t["next"]}</span>{_CHEV_NEXT}</a>' if i + 1 < total
+           else f'<span class="pg-next is-off" aria-hidden="true"><span>{t["next"]}</span>{_CHEV_NEXT}</span>')
+    nums = "".join(f'<li><span aria-current="page">{n}</span></li>' if n == i + 1 else f'<li><a href="{href(n)}" aria-label="{t["page"]} {n}">{n}</a></li>'
+                   for n in range(1, total + 1))
+    return (f'<div class="pager" role="navigation" aria-label="{t["pages"]}">{prev}<ol class="pg-nums">{nums}</ol>'
+            f'<span class="pg-count">{t["page"]} <b>{i + 1}</b> {t["of"]} {total}</span>{nxt}</div>')
+
+
+def index_card(a):
+    lang, meta = a["lang"], a["meta"]
+    img = (f'<div class="blog-card-img"><img src="{cover_src(a)}" alt="{escape(meta.get("cover_alt") or meta["title"])}" loading="lazy"></div>'
+           if a.get("cover") else '<div class="blog-card-img"></div>')
+    return (f'<a href="{url(lang, "blog/" + a["slug"] + "/")}" class="blog-card-link"><article class="blog-card">{img}'
+            f'<div class="blog-card-body"><span class="blog-cat">{escape(SECTIONS[a["section"]][lang])}</span>'
+            f'<h2 class="blog-card-title">{escape(meta["title"])}</h2><p class="blog-card-excerpt">{escape(meta["excerpt"])}</p>'
+            f'<div class="blog-date"><span>{I_CLOCK}{reading_minutes(a["body"], lang)} {A[lang]["min"]}</span><span class="bd-more">{IDX[lang]["read"]}</span></div>'
+            f'</div></article></a>')
+
+
+def render_index(lang, path, title, desc, schema, group, chips_html, pager, alt_url, has_alt, noindex=False, h1=None):
+    from tools import shell
+    t = IDX[lang]
+    h1_html = escape(h1) if h1 else t["h1"]
+    head = seo_head(lang, path, title, desc, schema, has_alt=has_alt, noindex=noindex)
+    styles = (ROOT / "templates" / "blogindex" / "styles.html").read_text(encoding="utf-8")
+    dir_ = "rtl" if lang == "ar" else "ltr"
+    grid = '<div class="blog-grid" data-card="3">' + "".join(index_card(a) for a in group) + "</div>"
+    return f'''<!doctype html>
+<html lang="{lang}" dir="{dir_}">
+<head>
+{head}
+{shell.head_assets()}{styles}<link rel="stylesheet" href="/assets/nq/nq-fbar.css">
+<link rel="stylesheet" href="/assets/nq/nq-blog.css">
+<link rel="stylesheet" href="/assets/nq/uae-blog.css">
+</head>
+<body class="nq-inner nq-blogidx">
+{shell.header(lang, alt_url)}
+<main id="main">
+<header class="bh"><div class="bh-bg" aria-hidden="true"><img src="/images/hero/naqaa-team.webp" alt="" fetchpriority="high" decoding="async"></div><div class="bh-in"><h1>{h1_html}</h1></div></header>
+<section class="blog-paper">
+<div class="blog-sections" role="navigation" aria-label="{t["nav"]}">{chips_html}</div>
+<div class="container">{grid}</div>
+{pager}
+</section>
+</main>
+{shell.footer(lang)}
 <script src="/assets/nq/nq-ui.js" defer></script>
 </body>
 </html>
