@@ -1,0 +1,45 @@
+/* UAE light palette on top of the Riyadh home styles.
+   The Riyadh tokens are remapped: --bg* become light surfaces, --white becomes the ink colour. */
+:root{
+  --bg:#F3F4F1;--bg2:#FFFFFF;--bg3:#E9ECE6;
+  --white:#151821;--muted:#555B66;--line:rgba(13,24,40,.12);
+  --glass:rgba(13,24,40,.03);
+  --navy:#0D1828;--gold-ink:#8E6210;
+  color-scheme:light;
+}
+html,body{background:var(--bg);color:var(--white)}
+
+/* Dark islands keep the original light-on-dark text: hero photo, header, menus, final card, footer, contact bar */
+.hero,#hdr,#menu,.mm-p,.final-card,footer,.fbar,.svc,.ha-strip{--white:#f8f6f0;--muted:#a7b1c2;--line:rgba(201,168,76,.16);--glass:rgba(255,255,255,.04)}
+.hero,#hdr,#menu,.mm-p,.final-card,footer,.fbar,.svc{color:var(--white)}
+#hdr.solid{background:rgba(13,24,40,.94)}
+.ha-strip{background:#0D1828}
+
+/* Gold text on light: a deeper gold so headings and labels stay readable */
+.sec .gold,.cover .gold{background:linear-gradient(120deg,#8E6210,#B98F2E 55%,#A57A1E);-webkit-background-clip:text;background-clip:text}
+.sec .eyebrow,.cover .eyebrow,.faq .eyebrow{color:var(--gold-ink);background:rgba(201,168,76,.1);border-color:rgba(142,98,16,.22)}
+.sec .eyebrow i{background:var(--gold-ink);box-shadow:none}
+.lead a{color:var(--gold-ink)!important}
+
+/* Ghost buttons on light sections */
+.sec .btn-ghost{border-color:rgba(13,24,40,.22);color:var(--white);background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}
+.sec .btn-ghost:hover{border-color:var(--gold-ink);color:var(--gold-ink)}
+
+/* Cards */
+.fcard{background:#fff;border-color:var(--line);box-shadow:0 14px 30px -24px rgba(13,24,40,.35)}
+.fcard p{color:var(--muted)}
+.faq details{background:#fff;border-color:var(--line)}
+.faq details[open]{border-color:rgba(142,98,16,.35)}
+.svc{border-color:rgba(13,24,40,.08);box-shadow:0 18px 36px -26px rgba(13,24,40,.55)}
+
+/* Coverage chips */
+.chips a{text-decoration:none}
+.chips span{color:var(--white);background:#fff;border-color:var(--line)}
+@keyframes haChip{0%,22%,100%{border-color:var(--line);color:#151821;background:#fff;box-shadow:none}6%,14%{border-color:var(--gold2);color:#1a1405;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 0 16px rgba(228,191,106,.45)}}
+.dir{fill:#555B66}
+
+/* Steps */
+.num{background:#fff}
+
+/* Final section background */
+.final{background:radial-gradient(70% 60% at 50% 0%,rgba(201,168,76,.14),transparent 70%),var(--bg)}

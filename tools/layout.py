@@ -255,6 +255,44 @@ FONTS = {
 
 
 # ---------- full page ----------
+def seo_head(lang, path, title, description, schema=(), has_alt=True, noindex=False):
+    """charset, analytics, title/description, canonical, hreflang, Open Graph, icons and JSON-LD."""
+    graph = [dict(s) for s in schema]
+    ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(",", ":")) if graph else ""
+    alt = ""
+    if has_alt:
+        alt = (f'<link rel="alternate" hreflang="en" href="{abs_url("en", path)}">\n'
+               f'<link rel="alternate" hreflang="ar" href="{abs_url("ar", path)}">\n'
+               f'<link rel="alternate" hreflang="x-default" href="{abs_url("en", path)}">')
+    og_locale = "ar_AE" if lang == "ar" else "en_AE"
+    robots = "noindex,follow" if noindex else "index,follow,max-image-preview:large"
+    verify = f'<meta name="google-site-verification" content="{C.GSC_VERIFY}">' if C.GSC_VERIFY else ""
+    ld_tag = f'<script type="application/ld+json">{ld}</script>' if ld else ""
+    return f'''<meta charset="utf-8">
+{analytics()}
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{escape(title)}</title>
+<meta name="description" content="{escape(description)}">
+<meta name="robots" content="{robots}">
+<link rel="canonical" href="{abs_url(lang, path)}">
+{alt}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{escape(C.BRAND[lang])}">
+<meta property="og:title" content="{escape(title)}">
+<meta property="og:description" content="{escape(description)}">
+<meta property="og:url" content="{abs_url(lang, path)}">
+<meta property="og:image" content="{C.SITE_URL}/assets/og-default.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content="{og_locale}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0D1828">
+{verify}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+{ld_tag}'''
+
+
 def page(lang, path, title, description, body, services, locations, schema=(), current=None, has_alt=True, noindex=False):
     t = UI[lang]
     other = "en" if lang == "ar" else "ar"
@@ -287,33 +325,11 @@ def page(lang, path, title, description, body, services, locations, schema=(), c
     return f'''<!doctype html>
 <html lang="{lang}" dir="{dir_}">
 <head>
-<meta charset="utf-8">
-{analytics()}
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{escape(title)}</title>
-<meta name="description" content="{escape(description)}">
-<meta name="robots" content="{robots}">
-<link rel="canonical" href="{abs_url(lang, path)}">
-{alt}
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="{escape(C.BRAND[lang])}">
-<meta property="og:title" content="{escape(title)}">
-<meta property="og:description" content="{escape(description)}">
-<meta property="og:url" content="{abs_url(lang, path)}">
-<meta property="og:image" content="{C.SITE_URL}/assets/og-default.png">
-<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:locale" content="{og_locale}">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0D1828">
-{verify}
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
+{seo_head(lang, path, title, description, schema, has_alt, noindex)}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS[lang]}">
 <link rel="stylesheet" href="/assets/site.css">
-{f'<script type="application/ld+json">{ld}</script>' if ld else ""}
 </head>
 <body>
 <a class="skip" href="#main">{t["skip"]}</a>

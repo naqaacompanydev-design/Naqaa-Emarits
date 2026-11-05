@@ -24,6 +24,7 @@ from tools.layout import (UI, ICONS, aside, abs_url, breadcrumb_schema, business
 from content.services import SERVICES  # noqa: E402
 from content.locations import LOCATIONS  # noqa: E402
 from content import pages as P  # noqa: E402
+from tools.home import render as home_render  # noqa: E402
 
 LANGS = ("en", "ar")
 GENERATED_DIRS = ["ar", "services", "locations", "get-a-quote", "about", "contact", "faq", "privacy", "terms"]
@@ -98,7 +99,9 @@ def build_home(lang):
     website = {"@type": "WebSite", "@id": C.SITE_URL + "/#website", "url": abs_url(lang, ""), "name": C.BRAND[lang],
                "inLanguage": lang, "publisher": business_ref()}
     schema = [business_schema(lang, [l[lang]["name"] for l in LOCATIONS]), website, faq_schema(h["faqs"])]
-    emit(lang, "", page(lang, "", h["title"], h["desc"], body, SERVICES, LOCATIONS, schema, current=""))
+    faqs = h["faqs"] + P.FAQ[lang]["general"][3:5]
+    schema[-1] = faq_schema(faqs)
+    emit(lang, "", home_render(lang, h["title"], h["desc"], schema, faqs))
 
 
 def build_service(lang, s):
@@ -314,7 +317,7 @@ def write_images():
 def check():
     problems, titles = [], {}
     existing = {url(lang, path) for lang, path, _ in PAGES}
-    static_ok = ("/assets/", "/favicon", "/site.webmanifest", "/sitemap.xml")
+    static_ok = ("/assets/", "/images/", "/favicon", "/site.webmanifest", "/sitemap.xml")
     for lang, path, html in PAGES:
         where = url(lang, path)
         title = re.search(r"<title>(.*?)</title>", html).group(1)
