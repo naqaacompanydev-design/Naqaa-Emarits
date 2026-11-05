@@ -77,7 +77,7 @@ def build_home(lang):
     promise = "".join(f'<li>{ICONS[i]}<div><b>{escape(a)}</b><span>{escape(b)}</span></div></li>' for i, a, b in h["promise"])
     svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], s[lang]["name"], s[lang]["card"], t["learn_more"]) for s in SERVICES])
     loc_cards = cards([(url(lang, f'locations/{l["slug"]}/'), "pin", l[lang]["name"], "، ".join(l[lang]["areas"][:4]) + "…" if lang == "ar" else ", ".join(l[lang]["areas"][:4]) + "…", t["price_arrow"]) for l in LOCATIONS], "four")
-    body = f'''<section class="hero hero-home"><div class="wrap">
+    body = f'''<div class="home-page"><section class="hero hero-home"><div class="wrap">
   <div><p class="eyebrow">{h["eyebrow"]}</p><h1>{h["h1"]}</h1><p class="lead">{h["lead"]}</p>
     <div class="btn-row"><a class="btn btn-gold" href="#quote">{t["price"]}</a><a class="btn btn-ghost" href="{url(lang, "services/")}">{t["see_services"]}</a></div>
     <ul class="chips">{chips}</ul></div>
@@ -91,7 +91,7 @@ def build_home(lang):
   <div class="head"><p class="eyebrow">{h["why_eyebrow"]}</p><h2>{h["why_h"]}</h2></div>
   <div class="prose">{h["why_html"]}</div></div></section>
 <section class="band"><div class="wrap faq-split"><div class="head"><p class="eyebrow">{t["nav_faq"]}</p><h2>{t["faq_title"]}</h2></div>{faq_block(h["faqs"])}</div></section>
-{final_cta(lang)}'''
+{final_cta(lang)}</div>'''
     website = {"@type": "WebSite", "@id": C.SITE_URL + "/#website", "url": abs_url(lang, ""), "name": C.BRAND[lang],
                "inLanguage": lang, "publisher": business_ref()}
     schema = [business_schema(lang, [l[lang]["name"] for l in LOCATIONS]), website, faq_schema(h["faqs"])]

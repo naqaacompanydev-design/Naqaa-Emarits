@@ -256,3 +256,12 @@ tr:last-child td{border-bottom:0}
 .site-footer .cols,.site-footer .legal{text-align:center;justify-content:center}
 .site-footer .brand{justify-content:center}
 .site-footer p{margin-inline:auto}
+
+/* Home page: everything centered (owner request), including the quote form and FAQ. */
+.home-page .hero-home .quote,.home-page .field > label,.home-page .field > legend{text-align:center}
+.home-page .field > legend{width:100%}
+.home-page .seg{justify-content:center}
+.home-page select{text-align:center;text-align-last:center}
+.home-page input[type="text"]{text-align:center}
+.home-page .faq summary{justify-content:center;text-align:center}
+.home-page .faq details p{margin-inline:auto;text-align:center}
