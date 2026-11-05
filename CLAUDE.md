@@ -63,7 +63,7 @@ statistics, reviews, guarantees or approvals. Arabic in clear MSA suited to UAE 
 
 ## SEO rules
 - Unique `title` (≤ ~60 chars) and `desc` (120–155 chars) per page and language.
-- Every page exists in both languages (hreflang pairs are generated from the same path).
+- Every site page exists in both languages (hreflang pairs are generated from the same path). Blog articles may be in one language; hreflang is added only when both exist.
 - Internal links inside content use the language prefix (`/ar/...` on Arabic pages).
 
 ## Content rules
