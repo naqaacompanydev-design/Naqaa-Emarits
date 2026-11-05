@@ -5,7 +5,7 @@ HOME = {
     "title": "Naqaa Cleaning UAE | Home, Villa & Office Cleaning in Dubai",
     "desc": "Cleaning company in Dubai, Abu Dhabi, Sharjah and Ajman: home, deep, move-out, sofa, water tank and office cleaning. Get your price on WhatsApp.",
     "eyebrow": "Cleaning company in Dubai · Abu Dhabi · Sharjah · Ajman",
-    "h1": "Cleaning worthy of <em>your home and your space</em>",
+    "h1": "A clean that suits <em>your home and your place</em>",
     "lead": "Home, villa and office cleaning across the UAE. Trained cleaners, our own equipment and materials, and a clear price in AED before we arrive. Book in two minutes on WhatsApp.",
     "chips": ["Studio to villa", "Move-in / move-out", "Water tanks", "Offices on contract"],
     "promise": [
