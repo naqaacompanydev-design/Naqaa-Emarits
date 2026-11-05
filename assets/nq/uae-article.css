@@ -3,3 +3,8 @@
 .art-head .breadcrumb a{text-decoration:none}
 .cta-buttons svg,.sidebar-cta svg,.btn-whatsapp svg,.btn-phone svg{width:20px;height:20px;flex:none}
 .cta-buttons a{white-space:nowrap}
+/* English articles: the Riyadh article styles are written for RTL */
+html[dir="ltr"] body.nq-art{direction:ltr}
+html[dir="ltr"] .article-body,html[dir="ltr"] .sidebar{text-align:left}
+html[dir="ltr"] .article-body h2{border-right:0;border-left:4px solid var(--gold,#c9a84c);padding-right:0;padding-left:14px}
+html[dir="ltr"] .intro-box{border-right:0;border-left:4px solid var(--gold,#c9a84c)}
