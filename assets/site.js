@@ -1,5 +1,5 @@
 /* Quick quote: builds a WhatsApp message from the form. No data is stored or sent anywhere else. */
-document.querySelectorAll("form.quote").forEach(function (form) {
+document.querySelectorAll("form.quote, form.bookbar").forEach(function (form) {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var ar = document.documentElement.lang === "ar";

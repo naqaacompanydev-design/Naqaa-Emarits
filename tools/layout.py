@@ -12,7 +12,7 @@ UI = {
         "nav_faq": "FAQ", "nav_contact": "Contact", "nav_quote": "Get a price",
         "menu": "Menu", "skip": "Skip to content", "home": "Home",
         "other_lang": "العربية", "other_lang_label": "اقرأ هذه الصفحة بالعربية",
-        "wa": "WhatsApp", "call": "Call", "price": "Get your price",
+        "wa": "WhatsApp", "call": "Call", "wa_cta": "Get a price on WhatsApp", "price": "Get your price",
         "draft": "Preview build · phone numbers, domain and licence details are placeholders until confirmed",
         "f_services": "Services", "f_locations": "Locations", "f_company": "Company",
         "f_about": "Naqaa brings the cleaning standards it built in Riyadh to homes, villas and offices in the UAE.",
@@ -38,7 +38,7 @@ UI = {
         "nav_faq": "الأسئلة", "nav_contact": "تواصل معنا", "nav_quote": "اعرف السعر",
         "menu": "القائمة", "skip": "انتقل إلى المحتوى", "home": "الرئيسية",
         "other_lang": "English", "other_lang_label": "Read this page in English",
-        "wa": "واتساب", "call": "اتصل", "price": "اعرف سعرك",
+        "wa": "واتساب", "call": "اتصل", "wa_cta": "اطلب السعر على واتساب", "price": "اعرف سعرك",
         "draft": "نسخة معاينة · أرقام التواصل والدومين وبيانات الرخصة مؤقتة حتى يتم تأكيدها",
         "f_services": "الخدمات", "f_locations": "المناطق", "f_company": "الشركة",
         "f_about": "نقاء تنقل معايير التنظيف التي بنتها في الرياض إلى البيوت والفلل والمكاتب في الإمارات.",
@@ -172,6 +172,20 @@ def quote_form(lang, services, locations, preset_service=None, preset_location=N
   <div class="field"><label for="q-area">{t["q_area"]}</label><input type="text" id="q-area" name="area" autocomplete="address-level3" placeholder="{t["q_area_ph"]}"></div>
   <button class="btn btn-wa" type="submit">{WA_ICON}<span>{t["q_btn"]}</span></button>
   <p class="note">{t["q_note"]}</p>
+</form>'''
+
+
+def booking_bar(lang, services, locations):
+    """One-line booking bar (home hero): service, emirate, size, WhatsApp button."""
+    t = UI[lang]
+    svc = "".join(f'<option value="{s["slug"]}">{escape(s[lang]["name"])}</option>' for s in services)
+    loc = "".join(f'<option value="{l["slug"]}">{escape(l[lang]["name"])}</option>' for l in locations)
+    size = "".join(f'<option value="{v}"{" selected" if i == 2 else ""}>{escape(label)}</option>' for i, (v, label) in enumerate(t["sizes"]))
+    return f'''<form class="bookbar" id="quote" data-wa="{wa_number()}" aria-label="{t["q_title"]}">
+  <label for="bb-service"><small>{t["q_service"]}</small><select id="bb-service" name="service">{svc}</select></label>
+  <label for="bb-emirate"><small>{t["q_emirate"]}</small><select id="bb-emirate" name="emirate">{loc}</select></label>
+  <label for="bb-size"><small>{t["q_size"]}</small><select id="bb-size" name="size">{size}</select></label>
+  <button class="btn btn-wa" type="submit">{WA_ICON}<span>{t["price"]}</span></button>
 </form>'''
 
 

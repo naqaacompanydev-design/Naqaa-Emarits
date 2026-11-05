@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT))
 
 from tools import config as C  # noqa: E402
 from tools.layout import (UI, ICONS, aside, abs_url, breadcrumb_schema, business_schema, business_ref,  # noqa: E402
-                          cards, crumbs_html, faq_block, faq_schema, final_cta, page, quote_form, url,
+                          booking_bar, cards, crumbs_html, faq_block, faq_schema, final_cta, page, quote_form, url,
                           wa_number, tel_number, WA_ICON, CALL_ICON)
 from content.services import SERVICES  # noqa: E402
 from content.locations import LOCATIONS  # noqa: E402
@@ -77,12 +77,15 @@ def build_home(lang):
     promise = "".join(f'<li>{ICONS[i]}<div><b>{escape(a)}</b><span>{escape(b)}</span></div></li>' for i, a, b in h["promise"])
     svc_cards = cards([(url(lang, f'services/{s["slug"]}/'), s["icon"], s[lang]["name"], s[lang]["card"], t["learn_more"]) for s in SERVICES])
     loc_cards = cards([(url(lang, f'locations/{l["slug"]}/'), "pin", l[lang]["name"], "، ".join(l[lang]["areas"][:4]) + "…" if lang == "ar" else ", ".join(l[lang]["areas"][:4]) + "…", t["price_arrow"]) for l in LOCATIONS], "four")
-    body = f'''<div class="home-page"><section class="hero hero-home"><div class="wrap">
-  <div><p class="eyebrow">{h["eyebrow"]}</p><h1>{h["h1"]}</h1><p class="lead">{h["lead"]}</p>
-    <div class="btn-row"><a class="btn btn-gold" href="#quote">{t["price"]}</a><a class="btn btn-ghost" href="{url(lang, "services/")}">{t["see_services"]}</a></div>
-    <ul class="chips">{chips}</ul></div>
-  {quote_form(lang, SERVICES, LOCATIONS)}
-</div></section>
+    alt = "تنظيف كنبة قماش بجهاز الشفط" if lang == "ar" else "Cleaning a fabric sofa with an extraction machine"
+    body = f'''<div class="home-page"><section class="hero hero-home hero-photo">
+  <img class="hero-bg" src="/assets/hero-home.webp" alt="{alt}" width="736" height="319" fetchpriority="high" decoding="async">
+  <div class="wrap"><div class="hero-copy">
+    <p class="eyebrow">{h["eyebrow"]}</p><h1>{h["h1"]}</h1><p class="lead">{h["lead"]}</p>
+    <div class="btn-row"><a class="btn btn-wa" href="https://wa.me/{wa_number()}" target="_blank" rel="noopener">{WA_ICON}<span>{t["wa_cta"]}</span></a><a class="btn btn-ghost" href="{url(lang, "services/")}">{t["see_services"]}</a></div>
+  </div></div>
+</section>
+<div class="wrap bookbar-wrap">{booking_bar(lang, SERVICES, LOCATIONS)}</div>
 <div class="promise band-surface"><ul class="wrap">{promise}</ul></div>
 <section class="band"><div class="wrap"><div class="head"><p class="eyebrow">{h["svc_eyebrow"]}</p><h2>{h["svc_h"]}</h2><p>{h["svc_p"]}</p></div>{svc_cards}</div></section>
 {steps_band(lang, h["how_h"])}
