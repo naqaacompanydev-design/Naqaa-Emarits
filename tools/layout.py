@@ -9,7 +9,7 @@ UI = {
     "en": {
         "brand_sub": "Cleaning · UAE",
         "nav_services": "Services", "nav_locations": "Locations", "nav_about": "About",
-        "nav_faq": "FAQ", "nav_contact": "Contact", "nav_quote": "Get a price",
+        "nav_faq": "FAQ", "nav_contact": "Contact", "nav_blog": "Blog", "nav_quote": "Get a price",
         "menu": "Menu", "skip": "Skip to content", "home": "Home",
         "other_lang": "العربية", "other_lang_label": "اقرأ هذه الصفحة بالعربية",
         "wa": "WhatsApp", "call": "Call", "wa_cta": "Get a price on WhatsApp", "price": "Get your price",
@@ -35,7 +35,7 @@ UI = {
     "ar": {
         "brand_sub": "للتنظيف · الإمارات",
         "nav_services": "الخدمات", "nav_locations": "المناطق", "nav_about": "من نحن",
-        "nav_faq": "الأسئلة", "nav_contact": "تواصل معنا", "nav_quote": "اعرف السعر",
+        "nav_faq": "الأسئلة", "nav_contact": "تواصل معنا", "nav_blog": "المدونة", "nav_quote": "اعرف السعر",
         "menu": "القائمة", "skip": "انتقل إلى المحتوى", "home": "الرئيسية",
         "other_lang": "English", "other_lang_label": "Read this page in English",
         "wa": "واتساب", "call": "اتصل", "wa_cta": "اطلب السعر على واتساب", "price": "اعرف سعرك",
@@ -79,6 +79,10 @@ WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path
 CALL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>'
 CALC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg>'
 LOGO_MARK = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round"/><circle cx="20" cy="20" r="3.2" fill="#C9A84C"/></svg>'
+
+
+# Set by build.py: True once a language has at least one published article.
+BLOG_LIVE = {"en": False, "ar": False}
 
 
 # ---------- URLs ----------
@@ -255,7 +259,7 @@ FONTS = {
 
 
 # ---------- full page ----------
-def seo_head(lang, path, title, description, schema=(), has_alt=True, noindex=False):
+def seo_head(lang, path, title, description, schema=(), has_alt=True, noindex=False, og_image=None, og_type="website"):
     """charset, analytics, title/description, canonical, hreflang, Open Graph, icons and JSON-LD."""
     graph = [dict(s) for s in schema]
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(",", ":")) if graph else ""
@@ -276,12 +280,12 @@ def seo_head(lang, path, title, description, schema=(), has_alt=True, noindex=Fa
 <meta name="robots" content="{robots}">
 <link rel="canonical" href="{abs_url(lang, path)}">
 {alt}
-<meta property="og:type" content="website">
+<meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="{escape(C.BRAND[lang])}">
 <meta property="og:title" content="{escape(title)}">
 <meta property="og:description" content="{escape(description)}">
 <meta property="og:url" content="{abs_url(lang, path)}">
-<meta property="og:image" content="{C.SITE_URL}/assets/og-default.png">
+<meta property="og:image" content="{og_image or C.SITE_URL + "/assets/og-default.png"}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:locale" content="{og_locale}">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +297,8 @@ def seo_head(lang, path, title, description, schema=(), has_alt=True, noindex=Fa
 {ld_tag}'''
 
 
-def page(lang, path, title, description, body, services, locations, schema=(), current=None, has_alt=True, noindex=False):
+def page(lang, path, title, description, body, services, locations, schema=(), current=None, has_alt=True, noindex=False,
+         alt_path=None, og_image=None, og_type="website"):
     t = UI[lang]
     other = "en" if lang == "ar" else "ar"
     dir_ = "rtl" if lang == "ar" else "ltr"
@@ -312,9 +317,10 @@ def page(lang, path, title, description, body, services, locations, schema=(), c
         cur = ' aria-current="page"' if current == p else ""
         return f'<a href="{url(lang, p)}"{cur}>{t[key]}</a>'
 
-    nav_items = [("nav_services", "services/"), ("nav_locations", "locations/"), ("nav_about", "about/"), ("nav_faq", "faq/"), ("nav_contact", "contact/")]
+    nav_items = [("nav_services", "services/"), ("nav_locations", "locations/")] + ([("nav_blog", "blog/")] if BLOG_LIVE[lang] else []) + [("nav_about", "about/"), ("nav_faq", "faq/"), ("nav_contact", "contact/")]
     nav = "".join(nav_link(k, p) for k, p in nav_items)
-    lang_link = f'<a class="lang-link" href="{url(other, path)}" hreflang="{other}" lang="{other}" aria-label="{t["other_lang_label"]}">{t["other_lang"]}</a>'
+    alt_target = path if alt_path is None else alt_path
+    lang_link = f'<a class="lang-link" href="{url(other, alt_target)}" hreflang="{other}" lang="{other}" aria-label="{t["other_lang_label"]}">{t["other_lang"]}</a>'
 
     svc_links = "".join(f'<li><a href="{url(lang, "services/" + s["slug"] + "/")}">{escape(s[lang]["name"])}</a></li>' for s in services)
     loc_links = "".join(f'<li><a href="{url(lang, "locations/" + l["slug"] + "/")}">{escape(l[lang]["h1_short"])}</a></li>' for l in locations)
@@ -325,7 +331,7 @@ def page(lang, path, title, description, body, services, locations, schema=(), c
     return f'''<!doctype html>
 <html lang="{lang}" dir="{dir_}">
 <head>
-{seo_head(lang, path, title, description, schema, has_alt, noindex)}
+{seo_head(lang, path, title, description, schema, has_alt, noindex, og_image, og_type)}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS[lang]}">
@@ -339,7 +345,7 @@ def page(lang, path, title, description, body, services, locations, schema=(), c
     <a class="brand" href="{url(lang, "")}">{LOGO_MARK}<span><b>{C.BRAND_SHORT[lang]}</b><small>{t["brand_sub"]}</small></span></a>
     <nav class="nav" aria-label="{"الرئيسية" if lang == "ar" else "Main"}">{nav}{lang_link}<a class="btn btn-gold" href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a></nav>
     <details class="menu"><summary>{ICONS["menu"]}<span>{t["menu"]}</span></summary>
-      <div class="menu-panel">{nav}<a href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a><a href="{url(other, path)}" hreflang="{other}" lang="{other}">{t["other_lang"]}</a></div>
+      <div class="menu-panel">{nav}<a href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a><a href="{url(other, alt_target)}" hreflang="{other}" lang="{other}">{t["other_lang"]}</a></div>
     </details>
   </div>
 </header>
@@ -355,7 +361,7 @@ def page(lang, path, title, description, body, services, locations, schema=(), c
     <div><h2>{t["f_company"]}</h2><ul>
       <li><a href="{url(lang, "about/")}">{t["nav_about"]}</a></li>
       <li><a href="{url(lang, "get-a-quote/")}">{t["nav_quote"]}</a></li>
-      <li><a href="{url(lang, "faq/")}">{t["nav_faq"]}</a></li>
+      <li><a href="{url(lang, "faq/")}">{t["nav_faq"]}</a></li>{f'<li><a href="{url(lang, "blog/")}">{t["nav_blog"]}</a></li>' if BLOG_LIVE[lang] else ""}
       <li><a href="{url(lang, "contact/")}">{t["nav_contact"]}</a></li>
       <li><a href="{sister}" rel="noopener">{t["f_sister"]}</a></li></ul></div>
   </div>

@@ -25,9 +25,10 @@ from content.services import SERVICES  # noqa: E402
 from content.locations import LOCATIONS  # noqa: E402
 from content import pages as P  # noqa: E402
 from tools.home import render as home_render  # noqa: E402
+from tools import blog as BLOG, layout as LAYOUT  # noqa: E402
 
 LANGS = ("en", "ar")
-GENERATED_DIRS = ["ar", "services", "locations", "get-a-quote", "about", "contact", "faq", "privacy", "terms"]
+GENERATED_DIRS = ["ar", "blog", "services", "locations", "get-a-quote", "about", "contact", "faq", "privacy", "terms"]
 SVC = {s["slug"]: s for s in SERVICES}
 LOC = {l["slug"]: l for l in LOCATIONS}
 assert list(SVC) == C.SERVICES and list(LOC) == C.LOCATIONS, "config.SERVICES/LOCATIONS must match content order"
@@ -250,17 +251,23 @@ def build_404():
 
 
 # ---------------------------------------------------------------- static files
-def write_sitemap(paths):
+def write_sitemap(by_lang):
+    """by_lang: {lang: set(paths)}. hreflang alternates only where both languages exist."""
     today = date.today().isoformat()
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
-    for path in paths:
+    every = sorted(by_lang["en"] | by_lang["ar"], key=lambda p: (p.count("/"), p))
+    for path in every:
         prio = "1.0" if path == "" else ("0.9" if path.startswith(("services/", "locations/")) and path.count("/") == 2 else "0.7")
+        both = path in by_lang["en"] and path in by_lang["ar"]
         for lang in LANGS:
+            if path not in by_lang[lang]:
+                continue
             out.append(f"  <url><loc>{abs_url(lang, path)}</loc><lastmod>{today}</lastmod><priority>{prio}</priority>")
-            out.append(f'    <xhtml:link rel="alternate" hreflang="en" href="{abs_url("en", path)}"/>')
-            out.append(f'    <xhtml:link rel="alternate" hreflang="ar" href="{abs_url("ar", path)}"/>')
-            out.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{abs_url("en", path)}"/>')
+            if both:
+                out.append(f'    <xhtml:link rel="alternate" hreflang="en" href="{abs_url("en", path)}"/>')
+                out.append(f'    <xhtml:link rel="alternate" hreflang="ar" href="{abs_url("ar", path)}"/>')
+                out.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{abs_url("en", path)}"/>')
             out.append("  </url>")
     out.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(out) + "\n", encoding="utf-8")
@@ -346,6 +353,9 @@ def check():
 def main():
     for d in GENERATED_DIRS:
         shutil.rmtree(ROOT / d, ignore_errors=True)
+    published, _ = BLOG.load()
+    for lang in LANGS:
+        LAYOUT.BLOG_LIVE[lang] = bool(published[lang])
     for lang in LANGS:
         build_home(lang)
         build_services_hub(lang)
@@ -360,6 +370,7 @@ def main():
         build_faq(lang)
         build_prose_page(lang, P.PRIVACY, "privacy/")
         build_prose_page(lang, P.TERMS, "terms/")
+    _, blog_problems = BLOG.build(emit, SERVICES, LOCATIONS)
 
     for lang, path, html in PAGES:
         out = ROOT / ("ar" if lang == "ar" else "") / path / "index.html"
@@ -367,7 +378,7 @@ def main():
         out.write_text(html, encoding="utf-8")
     build_404()
     paths = sorted({p for _, p, _ in PAGES}, key=lambda p: (p.count("/"), p))
-    write_sitemap(paths)
+    write_sitemap({lang: {p for l, p, h in PAGES if l == lang and 'content="noindex' not in h} for lang in LANGS})
     write_manifest()
     write_images()
 
@@ -383,7 +394,7 @@ def main():
         warnings.append("No analytics IDs set")
     for w in warnings:
         print("  ! " + w)
-    problems = check()
+    problems = blog_problems + check()
     if problems:
         print("✗ Fix these and run again:")
         for p in problems:

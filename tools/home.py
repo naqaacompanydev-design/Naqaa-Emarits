@@ -14,6 +14,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from tools import config as C
+from tools import layout
 from tools.layout import seo_head, tel_number, wa_number
 
 T = Path(__file__).resolve().parent.parent / "templates" / "home"
@@ -58,6 +59,7 @@ def render(lang, title, description, schema, faqs):
         licence = (" · رقم الرخصة التجارية " if lang == "ar" else " · Trade licence no. ") + escape(C.TRADE_LICENCE)
     tokens = {
         "WA": wa_number(), "TEL": tel_number(), "TEL_DISPLAY": _tel_display(),
+        "BLOG_LINK": (f'<a href="{"/ar/" if lang == "ar" else "/"}blog/">{"المدونة" if lang == "ar" else "Blog"}</a>' if layout.BLOG_LIVE[lang] else ""),
         "WA_MSG": quote(WA_MSG[lang]), "LICENCE": licence, "FAQ": _faq(faqs),
         "STRIP1": _strip(STRIPS[lang][0]), "STRIP2": _strip(STRIPS[lang][1]), "STRIP3": _strip(STRIPS[lang][2]),
         **icons,

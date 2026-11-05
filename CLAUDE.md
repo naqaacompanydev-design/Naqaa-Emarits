@@ -21,12 +21,45 @@ internal links and JSON-LD. If it stops with ✗, fix what it lists and run agai
 | Service pages `/services/<slug>/` | `content/services.py` |
 | Emirate pages `/locations/<slug>/` | `content/locations.py` |
 | Home, hubs, quote, about, contact, FAQ, legal | `content/pages.py` |
+| Home page layout (Riyadh design, light palette) | `templates/home/` (`body.<lang>.html`, `light.css`), filled by `tools/home.py` |
+| Blog articles | `content/blog/articles.json` + `content/blog/<slug>/`, built by `tools/blog.py` |
 | Page shell, `<head>` SEO, header/footer, components, UI strings | `tools/layout.py` |
 | Styles / quote form script | `assets/site.css`, `assets/site.js` |
 
 Adding a service or emirate: add the entry (both `en` and `ar`) in `content/`, add its slug to
 `SERVICES`/`LOCATIONS` in `tools/config.py`, run the build. Menus, footer, cross links, sitemap
 and structured data update automatically.
+
+## Adding a blog article (do exactly this)
+
+The blog lives at `/blog/` and `/ar/blog/`. It stays hidden (no menu link, no sitemap entry)
+until the first article is published in that language.
+
+1. Create it from the template:
+
+   ```bash
+   python3 tools/new_article.py --slug move-out-cleaning-checklist-dubai --section moving --langs ar,en --cover path/to/cover.jpg
+   ```
+
+   - `--slug`: English, lowercase, words joined by `-`.
+   - `--section`: `homes`, `moving`, `water-tanks`, `upholstery`, `offices` or `guides` (see `tools/blog.py`).
+   - `--langs`: `ar`, `en` or `ar,en`. An Arabic-only article is fine.
+   - Cover: jpg/png, ideally 1600×900 or larger. The build makes a WebP copy.
+
+   This creates `content/blog/<slug>/body.<lang>.html` and adds a **draft** at the top of
+   `content/blog/articles.json`.
+2. In `articles.json`, fill `title`, `desc` (120–155 chars), `excerpt` and `cover_alt` for each language
+   (`short_title` is optional, used in breadcrumbs). Replace every `TODO`.
+3. Write the content in `body.<lang>.html`: `<h2>` sections and `<p>`, plus the ready components listed
+   in the comment at the top (`tip-box`, `warn-box`, `check`, `steps-list`, `faq`, images). No `<h1>`,
+   table of contents, reading time or booking box: the build adds them, and FAQ blocks become
+   FAQPage structured data. Link to service/location pages where it helps the reader.
+4. Set `"draft": false` and run `python3 build.py`. It builds the blog index (+ pages of 12),
+   section pages, the article with related articles, adds the blog link to menus and the sitemap.
+   If it stops with ✗, fix what it lists and run again.
+
+Writing style: practical, UAE-specific (Dubai/Abu Dhabi/Sharjah/Ajman), no made-up prices,
+statistics, reviews, guarantees or approvals. Arabic in clear MSA suited to UAE readers.
 
 ## SEO rules
 - Unique `title` (≤ ~60 chars) and `desc` (120–155 chars) per page and language.
