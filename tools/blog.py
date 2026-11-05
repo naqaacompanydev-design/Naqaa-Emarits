@@ -16,7 +16,7 @@ from html import escape, unescape
 from pathlib import Path
 
 from tools import config as C
-from tools.layout import (UI, abs_url, breadcrumb_schema, business_ref, crumbs_html, final_cta, page, quote_form, url)
+from tools.layout import (UI, seo_head, tel_number, wa_number, abs_url, breadcrumb_schema, business_ref, crumbs_html, final_cta, page, quote_form, url)
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "content" / "blog"
@@ -131,7 +131,8 @@ def add_heading_ids(html):
 
 
 def extract_faqs(html):
-    faqs = []
+    faqs = [(_text(q).strip(), _text(a).strip()) for q, a in re.findall(
+        r'<div class="faq-q">(.*?)</div>\s*<div class="faq-a">(.*?)</div>', html, flags=re.S)]
     for block in re.findall(r'<div class="faq">(.*?)</div>\s*(?=<|$)', html, flags=re.S):
         for q, a in re.findall(r"<summary>(.*?)</summary>\s*<p>(.*?)</p>", block, flags=re.S):
             faqs.append((_text(q).strip(), _text(a).strip()))
@@ -237,49 +238,162 @@ def build(emit, services, locations):
                                   alt_path=path if other_has_sec else ("blog/" if other_has_blog else "")))
             paths[lang].add(path)
 
-        # articles
+        # articles (naqaa-cleaning.com article design, see tools/article.py)
         for a in items:
             copy_assets(a)
-            meta, slug = a["meta"], a["slug"]
-            path = f"blog/{slug}/"
-            sec = SECTIONS[a["section"]]
-            trail = trail_home + [(t["blog"], "blog/"), (sec[lang], f"blog/category/{a['section']}/"), (meta.get("short_title") or meta["title"], path)]
-            html, toc = add_heading_ids(body_images(a["body"]))
-            faqs = extract_faqs(a["body"])
-            mins = reading_minutes(a["body"], lang)
-            toc_html = ""
-            if len(toc) >= 3:
-                toc_html = (f'<details class="toc" open><summary>{t["toc"]}</summary><ol>' +
-                            "".join(f'<li><a href="#{hid}">{escape(txt)}</a></li>' for hid, txt in toc) + "</ol></details>")
-            cover = (f'<figure class="post-cover"><img src="{cover_src(a)}" alt="{escape(meta.get("cover_alt", ""))}" width="1200" height="675" fetchpriority="high"></figure>'
-                     if a.get("cover") else "")
+            path = f"blog/{a['slug']}/"
             same = [b for b in items if b is not a and b["section"] == a["section"]]
             rest = [b for b in items if b is not a and b["section"] != a["section"]]
-            rel = (same + rest)[:3]
-            rel_html = (f'<section class="post-related"><h2>{t["related"]}</h2><div class="post-grid">' +
-                        "".join(card(b, t) for b in rel) + "</div></section>") if rel else ""
-            updated = f' · {t["updated"]} {fmt_date(a["updated"], lang)}' if a.get("updated") else ""
-            eyebrow = f'{escape(sec[lang])} · {fmt_date(a["date"], lang)}{updated} · {mins} {t["min"]}'
-            svc_link = (url(lang, f'services/{sec["service"]}/'), next(s[lang]["name"] for s in services if s["slug"] == sec["service"]))
-            side = (f'<div class="aside">{quote_form(lang, services, locations, preset_service=sec["service"])}'
-                    f'<div class="box"><h2>{t["service_box"]}</h2><ul><li><a href="{svc_link[0]}">{escape(svc_link[1])}</a></li>'
-                    + "".join(f'<li><a href="{url(lang, "blog/" + b["slug"] + "/")}">{escape(b["meta"].get("short_title") or b["meta"]["title"])}</a></li>' for b in rel[:3])
-                    + "</ul></div></div>")
-            body = (f'<section class="hero hero-inner"><div class="wrap">{crumbs_html(lang, trail)}<p class="eyebrow">{eyebrow}</p>'
-                    f'<h1>{escape(meta["title"])}</h1><p class="lead">{escape(meta["excerpt"])}</p></div></section>'
-                    f'<section class="band"><div class="wrap layout"><article class="prose post">{cover}{toc_html}{html}{rel_html}</article>{side}</div></section>'
-                    + final_cta(lang))
-            img = (C.SITE_URL + cover_src(a, Path(a["cover"]).suffix.lstrip(".").lower())) if a.get("cover") else C.SITE_URL + "/assets/og-default.png"
-            posting = {"@type": "BlogPosting", "headline": meta["title"], "description": meta["desc"], "image": img,
-                       "datePublished": a["date"], "dateModified": a.get("updated") or a["date"], "inLanguage": lang,
-                       "author": {"@type": "Organization", "name": C.BRAND[lang], "url": abs_url(lang, "")},
-                       "publisher": business_ref(), "mainEntityOfPage": abs_url(lang, path)}
-            schema = [posting, breadcrumb_schema(lang, trail)] + ([{"@type": "FAQPage", "mainEntity": [
-                {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faqs]}] if faqs else [])
-            both = other in a["langs"]
-            emit(lang, path, page(lang, path, meta.get("seo_title") or f'{meta["title"]} | {C.BRAND_SHORT[lang]}', meta["desc"], body,
-                                  services, locations, schema, current="blog/", has_alt=both,
-                                  alt_path=path if both else ("blog/" if other_has_blog else ""),
-                                  og_image=img, og_type="article"))
+            emit(lang, path, render_article(a, (same + rest)[:3], other_has_blog))
             paths[lang].add(path)
     return paths, problems
+
+
+# ---------------------------------------------------------------- article page (Riyadh design)
+TPL = ROOT / "templates" / "article"
+_SVG = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'
+I_CAL = f'<svg {_SVG}><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>'
+I_CLOCK = f'<svg {_SVG}><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/></svg>'
+I_USER = f'<svg {_SVG}><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>'
+
+A = {
+    "ar": {"home": "الرئيسية", "author": "فريق نقاء للتنظيف", "min": "دقيقة قراءة", "toc": "محتويات المقال", "parts": "قسم",
+           "book_b": "تبي تعرف السعر قبل ما تحجز؟", "book_s": "اختار الخدمة واعرف سعرك بالدرهم، أو كلمنا على واتساب.",
+           "price": "اعرف سعرك", "wa": "واتساب", "related": "مقالات ممكن تهمك",
+           "why": "لماذا نقاء للتنظيف؟", "why_rows": ["سعر واضح بالدرهم قبل الحجز", "قائمة مهام لكل خدمة", "فريق مدرب والمعدات علينا", "دبي وأبوظبي والشارقة وعجمان"],
+           "side_h": "عايز تعرف السعر قبل ما تقرر؟", "side_p": "ابعت احتياجك وصور المكان وخد عرض واضح", "side_btn": "واتساب الآن", "side_note": "🏷 رد سريع ومساعدة في اختيار الخدمة",
+           "cta_h": "احجز الآن مع نقاء للتنظيف", "cta_p": "خدمات تنظيف للمنازل والفلل والمكاتب في الإمارات بسعر واضح وفريق مدرب",
+           "cta_list": ["سعر واضح بالدرهم قبل البدء", "فريق حسب المساحة ومعدات احترافية", "مواد مناسبة لكل سطح", "دبي وأبوظبي والشارقة وعجمان"],
+           "cta_wa": "تواصل عبر واتساب", "cta_call": "اتصل بنا مباشرة",
+           "wa_msg": "السلام عليكم، قرأت مقال في مدونة نقاء وأريد الاستفسار عن خدمة تنظيف", "bc": "مسار التنقل"},
+    "en": {"home": "Home", "author": "Naqaa Cleaning team", "min": "min read", "toc": "In this article", "parts": "sections",
+           "book_b": "Want the price before you book?", "book_s": "Pick the service and get your price in AED, or message us on WhatsApp.",
+           "price": "Get your price", "wa": "WhatsApp", "related": "You may also like",
+           "why": "Why Naqaa Cleaning?", "why_rows": ["Clear price in AED before booking", "A checklist for every service", "Trained team, equipment included", "Dubai, Abu Dhabi, Sharjah, Ajman"],
+           "side_h": "Want a price before you decide?", "side_p": "Send what you need and a few photos, get a clear quote", "side_btn": "WhatsApp now", "side_note": "🏷 Quick reply and help choosing the service",
+           "cta_h": "Book with Naqaa Cleaning", "cta_p": "Home, villa and office cleaning across the UAE with a clear price and a trained team",
+           "cta_list": ["Clear price in AED before we start", "Team sized to your space, pro equipment", "The right products for every surface", "Dubai, Abu Dhabi, Sharjah and Ajman"],
+           "cta_wa": "Message us on WhatsApp", "cta_call": "Call us",
+           "wa_msg": "Hello, I read an article on the Naqaa blog and would like to ask about a cleaning service", "bc": "Breadcrumb"},
+}
+
+
+def render_article(a, related, other_has_blog):
+    from urllib.parse import quote
+    from tools.home import _tel_display
+    lang, meta, slug = a["lang"], a["meta"], a["slug"]
+    t = A[lang]
+    icons = json.loads((ROOT / "templates" / "home" / "icons.json").read_text(encoding="utf-8"))
+    path = f"blog/{slug}/"
+    sec = SECTIONS[a["section"]]
+    wa = f"https://wa.me/{wa_number()}?text={quote(t['wa_msg'])}"
+    other = "ar" if lang == "en" else "en"
+    both = other in a["langs"]
+    alt_url = url(other, path if both else ("blog/" if other_has_blog else ""))
+
+    # content: heading ids, WebP images, booking boxes before the 3rd and the 2/3 heading
+    html = body_images(re.sub(r"<!--.*?-->", "", a["body"], flags=re.S))
+    n = 0
+
+    def hid(m):
+        nonlocal n
+        n += 1
+        return f'<h2{m.group(1)} id="s{n}">'
+    html = re.sub(r"<h2((?:(?!id=)[^>])*)>", hid, html)
+    toc = [(i, _text(x).strip()) for i, x in re.findall(r'<h2[^>]*id="(s\d+)"[^>]*>(.*?)</h2>', html, flags=re.S)]
+    book = (f'<aside class="art-book" aria-label="{t["price"]}"><div class="art-book-txt"><b>{t["book_b"]}</b><span>{t["book_s"]}</span></div>'
+            f'<div class="art-book-btns"><a class="bk-p" data-nq="price" href="{url(lang, "get-a-quote/")}">{icons["ICON_CALC"]}{t["price"]}</a>'
+            f'<a class="bk-w" href="{wa}" target="_blank" rel="noopener">{icons["ICON_WA"]}{t["wa"]}</a></div></aside>\n')
+    for k in sorted({3, max(4, round(len(toc) * 2 / 3))}, reverse=True):
+        if k <= len(toc):
+            html = html.replace(f'<h2 id="s{k}">', book + f'<h2 id="s{k}">', 1)
+    toc_ol = "<ol>" + "".join(f'<li><a href="#{i}">{escape(x)}</a></li>' for i, x in toc) + "</ol>"
+    toc_sum = f'<summary>{t["toc"]} <small>{len(toc)} {t["parts"]}</small></summary>'
+    inline_toc = f'<details class="art-toc art-toc-inline">{toc_sum}{toc_ol}</details>\n'
+    if '<div class="intro-box">' in html:
+        end = html.index("</div>", html.index('<div class="intro-box">')) + 6
+        html = html[:end] + "\n" + inline_toc + html[end:]
+    else:
+        html = inline_toc + html
+
+    mins = reading_minutes(a["body"], lang)
+    cover_alt = escape(meta.get("cover_alt") or meta["title"])
+    cover = f'<figure class="art-cover"><img src="{cover_src(a)}" alt="{cover_alt}" fetchpriority="high" decoding="async"></figure>' if a.get("cover") else ""
+    rel = ""
+    if related:
+        rel = (f'<section class="art-related" aria-labelledby="art-rel-h"><h2 class="art-related-h" id="art-rel-h">{t["related"]}</h2><div class="art-rel-grid">' +
+               "".join(f'<a class="art-rel" href="{url(lang, "blog/" + b["slug"] + "/")}">'
+                       + (f'<img src="{cover_src(b)}" alt="{escape(b["meta"].get("cover_alt") or b["meta"]["title"])}" loading="lazy" decoding="async">' if b.get("cover") else "")
+                       + f'<div class="art-rel-b"><span class="art-rel-cat">{escape(SECTIONS[b["section"]][lang])}</span><h3>{escape(b["meta"]["title"])}</h3>'
+                       f'<span class="art-rel-m">{I_CLOCK}{reading_minutes(b["body"], lang)} {t["min"]}</span></div></a>' for b in related) + "</div></section>")
+    cta = (f'<div class="cta-section"><h2>{t["cta_h"]}</h2><p>{t["cta_p"]}</p><ul class="cta-list">' + "".join(f"<li>{x}</li>" for x in t["cta_list"]) +
+           f'</ul><div class="cta-buttons"><a href="{wa}" class="btn-whatsapp" target="_blank" rel="noopener">{icons["ICON_WA"]}{t["cta_wa"]}</a>'
+           f'<a href="tel:+{tel_number()}" class="btn-phone">{icons["ICON_CALL"]}{t["cta_call"]}</a></div></div>')
+    side = (f'<aside class="sidebar"><div class="sidebar-inner"><details class="art-toc art-toc-side" open>{toc_sum}{toc_ol}</details>'
+            f'<div class="sidebar-card"><div class="sidebar-card-head"><h4>{t["why"]}</h4></div><div class="sidebar-card-body"><div class="quick-prices">'
+            + "".join(f'<div class="qp-row"><span class="qp-label">{x}</span><span class="qp-price">✔</span></div>' for x in t["why_rows"]) +
+            f'</div></div></div><div class="sidebar-cta"><h4>{t["side_h"]}</h4><p>{t["side_p"]}</p><a href="{wa}" class="btn-whatsapp" target="_blank" rel="noopener">{icons["ICON_WA"]}{t["side_btn"]}</a>'
+            f'<div class="sidebar-discount">{t["side_note"]}</div></div></div></aside>')
+    crumbs = [(t["home"], url(lang, "")), (S[lang]["blog"], url(lang, "blog/")), (sec[lang], url(lang, f"blog/category/{a['section']}/"))]
+    bc = "".join(f'<a href="{h}">{escape(x)}</a><span class="bc-sep">›</span>' for x, h in crumbs) + f'<span>{escape(meta.get("short_title") or meta["title"])}</span>'
+
+    # SEO head + structured data
+    trail = [(t["home"], ""), (S[lang]["blog"], "blog/"), (sec[lang], f"blog/category/{a['section']}/"), (meta.get("short_title") or meta["title"], path)]
+    img = (C.SITE_URL + cover_src(a, Path(a["cover"]).suffix.lstrip(".").lower())) if a.get("cover") else C.SITE_URL + "/assets/og-default.png"
+    faqs = extract_faqs(a["body"])
+    schema = [{"@type": "BlogPosting", "headline": meta["title"], "description": meta["desc"], "image": img,
+               "datePublished": a["date"], "dateModified": a.get("updated") or a["date"], "inLanguage": lang, "wordCount": len(_text(a["body"]).split()),
+               "author": {"@type": "Organization", "name": C.BRAND[lang], "url": abs_url(lang, "")},
+               "publisher": business_ref(), "mainEntityOfPage": abs_url(lang, path)}, breadcrumb_schema(lang, trail)]
+    if faqs:
+        schema.append({"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in faqs]})
+    title = meta.get("seo_title") or f'{meta["title"]} | {C.BRAND_SHORT[lang]}'
+    head = seo_head(lang, path, title, meta["desc"], schema, has_alt=both, og_image=img, og_type="article")
+
+    licence = ""
+    if C.TRADE_LICENCE:
+        licence = (" · رقم الرخصة التجارية " if lang == "ar" else " · Trade licence no. ") + escape(C.TRADE_LICENCE)
+    tokens = {"TEL": tel_number(), "TEL_DISPLAY": _tel_display(), "WA": wa_number(), "WA_MSG": quote(t["wa_msg"]),
+              "ALT_URL": alt_url, "LICENCE": licence, **icons}
+    header = (TPL / f"header.{lang}.html").read_text(encoding="utf-8")
+    footer = (TPL / f"footer.{lang}.html").read_text(encoding="utf-8")
+    for k, v in tokens.items():
+        header, footer = header.replace("{{" + k + "}}", v), footer.replace("{{" + k + "}}", v)
+    styles = (TPL / "styles.html").read_text(encoding="utf-8")
+    dir_ = "rtl" if lang == "ar" else "ltr"
+    return f'''<!doctype html>
+<html lang="{lang}" dir="{dir_}">
+<head>
+{head}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300..900&display=swap">
+<link rel="stylesheet" href="/assets/nq/nq-ui.css">
+{styles}<link rel="stylesheet" href="/assets/nq/nq-article.css">
+<link rel="stylesheet" href="/assets/nq/uae-article.css">
+<script src="/assets/nq/nq-article.js" defer></script>
+</head>
+<body class="nq-inner nq-art">
+{header}
+<header class="art-head"><div class="art-head-in">
+<nav class="breadcrumb" aria-label="{t["bc"]}">{bc}</nav>
+<span class="art-cat">{escape(sec[lang])}</span>
+<h1>{escape(meta["title"])}</h1>
+<div class="art-meta"><span>{I_CAL}{fmt_date(a["date"], lang)}</span><span>{I_CLOCK}{mins} {t["min"]}</span><span>{I_USER}{t["author"]}</span></div>
+</div></header>
+<div class="art-paper">
+{cover}
+<div class="page-wrapper">
+<main class="article-body">
+{html}
+{cta}
+{rel}
+</main>
+{side}
+</div>
+</div>
+{footer}
+<script src="/assets/nq/nq-ui.js" defer></script>
+</body>
+</html>
+'''

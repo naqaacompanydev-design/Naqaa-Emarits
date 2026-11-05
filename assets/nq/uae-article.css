@@ -1,0 +1,5 @@
+/* UAE additions on top of the naqaa-cleaning.com article styles */
+.article-body .reveal{opacity:1;transform:none}
+.art-head .breadcrumb a{text-decoration:none}
+.cta-buttons svg,.sidebar-cta svg,.btn-whatsapp svg,.btn-phone svg{width:20px;height:20px;flex:none}
+.cta-buttons a{white-space:nowrap}
