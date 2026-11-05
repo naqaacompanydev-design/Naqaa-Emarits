@@ -4,9 +4,9 @@ HOME = {
   "en": {
     "title": "Naqaa Cleaning UAE | Home, Villa & Office Cleaning in Dubai",
     "desc": "Cleaning company in Dubai, Abu Dhabi, Sharjah and Ajman: home, deep, move-out, sofa, water tank and office cleaning. Get your price on WhatsApp.",
-    "eyebrow": "Dubai · Abu Dhabi · Sharjah · Ajman",
-    "h1": "Cleaning company in the UAE for <em>homes, villas and offices</em>",
-    "lead": "Trained cleaners, our own equipment and materials, and a clear price in AED before we arrive. Book in two minutes on WhatsApp.",
+    "eyebrow": "Cleaning company in Dubai · Abu Dhabi · Sharjah · Ajman",
+    "h1": "Cleaning worthy of <em>your home and your space</em>",
+    "lead": "Home, villa and office cleaning across the UAE. Trained cleaners, our own equipment and materials, and a clear price in AED before we arrive. Book in two minutes on WhatsApp.",
     "chips": ["Studio to villa", "Move-in / move-out", "Water tanks", "Offices on contract"],
     "promise": [
       ("shield", "Vetted, trained team", "The standards we built in Riyadh."),
@@ -38,9 +38,9 @@ HOME = {
   "ar": {
     "title": "نقاء للتنظيف الإمارات | تنظيف منازل وفلل ومكاتب في دبي",
     "desc": "شركة تنظيف في دبي وأبوظبي والشارقة وعجمان: تنظيف منازل وتنظيف عميق وبعد الإخلاء وكنب وخزانات ومكاتب. اعرف السعر على واتساب.",
-    "eyebrow": "دبي · أبوظبي · الشارقة · عجمان",
-    "h1": "شركة تنظيف في الإمارات <em>للمنازل والفلل والمكاتب</em>",
-    "lead": "عمالة مدرّبة، ومعدات ومواد علينا، وسعر واضح بالدرهم قبل وصولنا. احجز في دقيقتين على واتساب.",
+    "eyebrow": "شركة تنظيف في دبي · أبوظبي · الشارقة · عجمان",
+    "h1": "نظافة تليق <em>بمنزلك ومكانك</em>",
+    "lead": "تنظيف المنازل والفلل والمكاتب في الإمارات. عمالة مدرّبة، ومعدات ومواد علينا، وسعر واضح بالدرهم قبل وصولنا. احجز في دقيقتين على واتساب.",
     "chips": ["من الاستوديو إلى الفيلا", "قبل السكن وبعد الإخلاء", "خزانات المياه", "عقود للمكاتب"],
     "promise": [
       ("shield", "فريق موثوق ومدرّب", "نفس المعايير التي بنيناها في الرياض."),
